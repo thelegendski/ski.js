@@ -1,0 +1,69 @@
+			/* no margin or overflow */
+			* {
+				margin: 0;
+				overflow: hidden;
+			}
+
+			body {
+				user-select: none;
+			}
+
+			/* canvas takes up the whole screen */
+			canvas {
+				width: 100vw;
+				height: 100vh;
+				position: fixed;
+				top: 0;
+				left: 0;
+				z-index: 0;
+				margin: 0;
+				padding: 0;
+			}
+
+			/* ignore the ridiculous println stylin' */
+			.print {
+				display: none;
+				position: fixed;
+				top: 0;
+				background: rgb(0, 0, 0, 0.5);
+				z-index: 1;
+				width: 100vw;
+				height: 20vh;
+				resize: vertical;
+				color: rgb(245, 245, 245, 0.5);
+				overflow-x: hidden;
+				overflow-y: auto;
+				font-size: 3vmin;
+				font-family: "Josefin Sans", 'Trebuchet MS', sans-serif;
+				user-select: text;
+			}
+
+			.close {
+				position: absolute;
+				top: 0;
+				right: 0;
+				margin: 1vmin;
+				width: 10vmin;
+				height: 5vmin;
+				background: none;
+				border: 1px rgb(245, 245, 245, 0.5);
+				cursor: pointer;
+				display: flex;
+				justify-content: center;
+				align-items: center;
+				font-size: 4vmin;
+				color: rgb(245, 245, 245, 0.5);
+				z-index: 1;
+				transition: 0.5s;
+				font-family: 'Josefin Sans', 'Trebuchet MS', sans-serif;
+				user-select: none;
+			}
+
+			.close:hover {
+				width: 15vmin;
+				color: rgb(245, 50, 50, 0.625);
+			}
+
+			.close:active {
+				color: rgb(245, 245, 245, 0.75);
+			}
