@@ -515,8 +515,7 @@ document.onkeypress = e=>{
 }
 //]
 //]
-var loopy
-window.init = true
+
 //]
 //print logic [
 var print = document.getElementsByClassName('print')[0]
@@ -527,6 +526,8 @@ print.onclick = e=>{
 	}
 }
 //]
+
+var loopy
 if (loopy)
 	window.clearInterval(loopy)
 loopy = window.setInterval(()=>{
