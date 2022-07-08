@@ -1,0 +1,2 @@
+# ski.js
+simplified PJS
