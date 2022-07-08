@@ -527,7 +527,6 @@ print.onclick = e=>{
 	}
 }
 //]
-}
 if (loopy)
 	window.clearInterval(loopy)
 loopy = window.setInterval(()=>{
