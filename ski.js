@@ -1051,8 +1051,8 @@ raf = time=>{
 	requestAnimationFrame(raf)
 
 	delta = time - then
-
-	ms = 1000 / data.rate
+	
+	var ms = 1000 / data.rate
 
 	if (delta < ms)
 
