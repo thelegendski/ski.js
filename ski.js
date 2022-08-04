@@ -12,7 +12,9 @@ closely modeled after Processing.js/p5.js. no code, unless noted, has been taken
 
 credits:
 
-	PT - khanacademy.org/profile/kaid_1007254215278267494550608 - helping to incorporate requestAnimationFrame over setInterval	Processing.js - the use of the radius parameter in the rect function an' its related code
+	PT - khanacademy.org/profile/kaid_1007254215278267494550608 - helping to incorporate requestAnimationFrame over setInterval	
+	
+	Processing.js - the use of the radius parameter in the rect function an' its related code
 
 	bravo bravo - khanacademy.org/profile/kaid_3550040499775075061747637 - advising the use of ctx.getImageData for the get function
 
@@ -1042,7 +1044,7 @@ document.onkeypress = e=>{
 
 //]
 
-let then = performance.now()
+var then = performance.now()
 
 raf = time=>{
 
@@ -1050,13 +1052,13 @@ raf = time=>{
 
 	delta = time - then
 
-	const ms = 1000 / data.rate
+	ms = 1000 / data.rate
 
 	if (delta < ms)
 
 		return
 
-	const overflow = delta % ms
+	var overflow = delta % ms
 
 	then = time - overflow
 
