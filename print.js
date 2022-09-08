@@ -98,12 +98,12 @@ close.setAttribute('name', 'ski')
 close.innerText = 'X'
 logger.appendChild(close)
 document.body.appendChild(logger)
-clearLogs = ()=> {
+var clearLogs = ()=> {
     document.querySelectorAll('.line[name="ski"]').forEach(c => logger.removeChild(c))
     logger.style.overflowY = 'hidden'
     close.innerText = 'X'
 }
-println = function() {
+var println = function() {
     logger.style.height === '' && (logger.style.animation = '0.5s open forwards', logger.style.overflowY = 'auto', logger.style.display = "block")
 	logger.innerHTML += `
 	<div class = 'line' name = 'ski'>
