@@ -67,7 +67,9 @@ data = {
 	angle: 'deg',
 	rate: 60,
 	millis: 0,
-	start: 0
+	start: 0,
+	flags: [],
+	comp: (font, size) => (data.flags.includes('bold') ? 'bold ' : '') + (data.flags.includes('italic') ? 'italic ' : '') + `${size}px ${font}`
 }
 //fps
 fps = 60
@@ -270,14 +272,15 @@ textAlign = (x,y)=>{
 	ctx.textBaseline = y <= 0 ? 'alphabetic' : 'middle'
 }
 createFont = (font)=>font
-textSize = size=>{
-	data.height = size
-	ctx.font = `${size}px ${data.font}`
-}
-textFont = (font,size)=>{
-	data.height = size
+textSize = (size) => data.height = size && (ctx.font = textComp(data.font, size))
+textFont = (font, size=data.height) => {
+	data.height !== size && (data.height = size)
+	data.flags = []
+	if ((/bold/i).test(font)) (data.flags.push('bold'), font = font.replace('bold', ''))
+	if ((/italic/i).test(font)) (data.flags.push('italic'), font = font.replace('italic', ''))
+	font = font.trim()
 	data.font = font
-	ctx.font = `${size}px ${font}`
+	ctx.font = textComp(font, size)
 }
 strokeCap = mode=>ctx.lineCap = mode
 strokeJoin = mode=>ctx.lineJoin = mode
