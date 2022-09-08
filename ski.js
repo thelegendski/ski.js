@@ -272,7 +272,7 @@ textAlign = (x,y)=>{
 	ctx.textBaseline = y <= 0 ? 'alphabetic' : 'middle'
 }
 createFont = (font)=>font
-textSize = (size) => data.height = size && (ctx.font = textComp(data.font, size))
+textSize = (size) => data.height = size && (ctx.font = data.comp(data.font, size))
 textFont = (font, size=data.height) => {
 	data.height !== size && (data.height = size)
 	data.flags = []
@@ -280,7 +280,7 @@ textFont = (font, size=data.height) => {
 	if ((/italic/i).test(font)) (data.flags.push('italic'), font = font.replace('italic', ''))
 	font = font.trim()
 	data.font = font
-	ctx.font = textComp(font, size)
+	ctx.font = data.comp(font, size)
 }
 strokeCap = mode=>ctx.lineCap = mode
 strokeJoin = mode=>ctx.lineJoin = mode
