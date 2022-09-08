@@ -118,3 +118,5 @@ var println = function() {
 		}
     </div>`
 }
+window.clearLogs = clearLogs
+window.println = println
