@@ -76,12 +76,8 @@ fps = 60
 //vector array
 pathz = []
 //miscellaneous [
-debug = function() {
-	console.debug(...arguments)
-}
-equal = function() {
-	console.assert(...arguments)
-}
+debug = (...args) => console.debug(...args)
+equal = (...args) => console.assert(...args)
 day = ()=>new Date().getDate()
 month = ()=>new Date().getMonth()
 year = ()=>new Date().getYear()
@@ -138,8 +134,9 @@ bezierPoint = (a,b,c,d,t)=>(1 - t) * (1 - t) * (1 - t) * a + 3 * (1 - t) * (1 - 
 bezierTangent = (a,b,c,d,t)=>(3 * t * t * (-a + 3 * b - 3 * c + d) + 6 * t * (a - 2 * b + c) + 3 * (-a + b))
 //]
 //colorin' [
-fill = function(r, g, b, a) {
-	switch (arguments.length) {
+fill = (...args) => {
+	const [r, g, b, a] = args.length > 4 ? Object.assign(args, {length: 4}) : args
+	switch (args.length) {
 	case 1:
 		ctx.fillStyle = typeof r === 'string' ? r : `rgb(${r}, ${r}, ${r}, 255)`
 		break;
@@ -153,8 +150,9 @@ fill = function(r, g, b, a) {
 		ctx.fillStyle = `rgb(${r}, ${g}, ${b}, ${a / 255})`
 	}
 }
-color = function(r, g, b, a) {
-	switch (arguments.length) {
+color = (...args) => {
+	const [r, g, b, a] = args.length > 4 ? Object.assign(args, {length: 4}) : args
+	switch (args.length) {
 	case 1:
 		return `rgba(${r}, ${r}, ${r}, 255)`
 		break
@@ -169,8 +167,9 @@ color = function(r, g, b, a) {
 		break
 	}
 }
-stroke = function(r, g, b, a) {
-	switch (arguments.length) {
+stroke = (...args) => {
+	const [r, g, b, a] = args.length > 4 ? Object.assign(args, {length: 4}) : args
+	switch (args.length) {
 	case 1:
 		ctx.strokeStyle = typeof r === 'string' ? r : `rgb(${r}, ${r}, ${r}, 255)`
 		break;
@@ -184,9 +183,10 @@ stroke = function(r, g, b, a) {
 		ctx.strokeStyle = `rgb(${r}, ${g}, ${b}, ${a / 255})`
 	}
 }
-background = function(r, g, b, a) {
+background = (...args) => {
+	const [r, g, b, a] = args.length > 4 ? Object.assign(args, {length: 4}) : args
 	let prev = [ctx.strokeStyle, ctx.fillStyle]
-	switch (arguments.length) {
+	switch (args.length) {
 	case 1:
 		ctx.fillStyle = typeof r === 'string' ? r : `rgb(${r}, ${r}, ${r}, 255)`
 		break;
@@ -304,18 +304,17 @@ endShape = (end)=>{
 	ctx.stroke()
 	ctx.fill()
 }
-curve = function(x, y, cx, cy, cX, cY, X, Y) {
-	if (arguments.length !== 8)
-		return
+curve = (...args) => {
+	if(args.length !== 6) return
+	const [x, y, cx, cy, X, Y] = args
 	beginShape()
 	vertex(x, y)
-	curveVertex(cx, cy, cX, cY)
-	vertex(X, Y)
+	curveVertex(cx, cy, X, Y)
 	endShape()
 }
-bezier = function(x, y, cx, cy, cX, cY, X, Y) {
-	if (arguments.length !== 8)
-		return
+bezier = (...args) => {
+	if(args.length !== 8) return
+	const [x, y, cx, cy, cX, cY, X, Y] = args
 	beginShape()
 	vertex(x, y)
 	bezierVertex(cx, cy, cX, cY, X, Y)
@@ -389,9 +388,10 @@ Canvas = (w,h)=>{
 	})
 	return [C, C.getContext('2d')]
 }
-get = function(x, y, w, h, src) {
+get = (...args) => {
+	const [x, y, w, h, src] = args
 	let canv, data, context, Canv
-	switch (arguments.length) {
+	switch (args.length) {
 	case 0:
 		get(0, 0, width, height)
 		break
