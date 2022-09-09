@@ -103,7 +103,7 @@ var clearLogs = ()=> {
     logger.style.overflowY = 'hidden'
     close.innerText = 'X'
 }
-var println = function() {
+var println = (...args) => {
     logger.style.height === '' && (logger.style.animation = '0.5s open forwards', logger.style.overflowY = 'auto', logger.style.display = "block")
 	logger.innerHTML += `
 	<div class = 'line' name = 'ski'>
@@ -114,7 +114,7 @@ var println = function() {
 					msg.map(s=>string += `${s} `)
 					return string.trim()
 				}
-			)(Array.from(arguments))
+			)(Array.from(args))
 		}
     </div>`
 }
