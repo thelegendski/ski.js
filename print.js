@@ -7,7 +7,7 @@ all code is made available and to be used under the MIT license. see here: http:
 intended for use in the Khan Academy environment. use outside of an educational environment is not intended.
 closely modeled after Processing.js/p5.js. no code, unless noted, has been taken from either.
 */
-
+var println, clearLogs
 document.head.appendChild(
     Object.assign(
         document.createElement('link'), {
@@ -98,12 +98,12 @@ close.setAttribute('name', 'ski')
 close.innerText = 'X'
 logger.appendChild(close)
 document.body.appendChild(logger)
-var clearLogs = ()=> {
+clearLogs = ()=> {
     document.querySelectorAll('.line[name="ski"]').forEach(c => logger.removeChild(c))
     logger.style.overflowY = 'hidden'
     close.innerText = 'X'
 }
-var println = (...args) => {
+println = (...args) => {
     logger.style.height === '' && (logger.style.animation = '0.5s open forwards', logger.style.overflowY = 'auto', logger.style.display = "block")
 	logger.innerHTML += `
 	<div class = 'line' name = 'ski'>
@@ -118,6 +118,3 @@ var println = (...args) => {
 		}
     </div>`
 }
-window.clearLogs = clearLogs
-window.println = println
-export {println, clearLogs}
