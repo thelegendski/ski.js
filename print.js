@@ -120,3 +120,4 @@ var println = (...args) => {
 }
 window.clearLogs = clearLogs
 window.println = println
+export {println, clearLogs}
