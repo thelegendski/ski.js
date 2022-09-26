@@ -1,6 +1,6 @@
 /*
 ski.js
-version 1.5.0
+version 1.5.1
 
 Copyright 2022 thelegendski
 
@@ -56,10 +56,10 @@ DEGREES = new String('deg')
 RADIANS = new String('rad')
 left = new Number(0)
 right = new Number(2)
-cw = new Number((width / 100) | 0)
-ch = new Number((height / 100) | 0)
-cmin = new Number(Math.min(cw, ch))
-cmax = new Number(Math.max(cw, ch))
+cw = (width / 100) | 0
+ch = (height / 100) | 0
+cmin = Math.min(cw, ch)
+cmax = Math.max(cw, ch)
 //]
 //general data to be stored
 data = {
@@ -100,15 +100,25 @@ size = (w,h)=>{
 	canvas.style.height = `${h}px`
 }
 noLoop = ()=>draw = 0
-set = el => {
-	if(el instanceof HTMLCanvasElement){
-		canvas = el
-		ctx = canvas.getContext('2d')
-	}
-	else {
-		canvas = new OffscreenCanvas(width, height)
-		ctx = canvas.getContext('2d')
-		return [canvas, ctx]
+set = (...args) => {
+	switch (args.length) {
+		case 0:
+			canvas = new OffscreenCanvas(width, height)
+			ctx = canvas.getContext('2d')
+			return [canvas, ctx]
+		break
+		case 1:
+			canvas = args[0]
+			ctx = canvas.getContext('2d')
+			width = canvas.width
+			height = canvas.height
+		break
+		case 2:
+			canvas = new OffscreenCanvas(args[0], args[1])
+			ctx = canvas.getContext('2d')
+			width = args[0]
+			height = args[1]
+			return [canvas, ctx]
 	}
 }
 //]
