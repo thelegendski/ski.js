@@ -32,7 +32,7 @@ credits:
 */
 
 //all variables at global scope
-var canvas, ctx, width, height, CORNER, CENTER, CLOSE, LEFT, RIGHT, UP, DOWN, SQUARE, ROUND, PROJECT, MITER, BEVEL, DEGREES, RADIANS, RGB, HSL, HEX, CSS, RECT, left, right, data, frameCount, frameRate, millis, debug, equal, day, month, year, hour, minute, seconds, enableContextMenu, smooth, cursor, angleMode, max, min, mag, dist, exp, norm, map, lerp, random, constrain, log, sqrt, sq, pow, abs, floor, ceil, round, sin, cos, tan, acos, asin, atan, atan2, radians, degrees, fill, stroke, background, color, colorMode, backgroundMode, noStroke, noFill, comp, rect, clear, text, rectMode, ellipseMode, createFont, textAlign, textFont, textSize, strokeCap, strokeJoin, strokeWeight, pushMatrix, popMatrix, translate, rotate, scale, beginShape, vertex, curveVertex, bezierVertex, endShape, curve, bezier, arc, ellipse, quad, triangle, point, line, textWidth, textAscent, textDescent, get, mask, image, mousePressed, mouseReleased, mouseScrolled, mouseClicked, mouseOver, mouseOut, mouseMoved, mouseIsPressed, mouseButton, mouseX, mouseY, pmouseX, pmouseY, keyPressed, keyReleased, keyTyped, key, keyIsPressed, keyCode, resetMatrix, clear, bezierPoint, bezierTangent, fps, lerpColor, size, cw, ch, cmin, cmax, Canvas, imageMode, arcMode, noLoop, raf, delta, loadImage, then, draw_standin, startMask, resetMask, getImage, pathz, set
+var canvas, ctx, width, height, CORNER, CENTER, CLOSE, LEFT, RIGHT, UP, DOWN, SQUARE, ROUND, PROJECT, MITER, BEVEL, DEGREES, RADIANS, RGB, HSL, HEX, left, right, data, frameCount, frameRate, millis, debug, equal, day, month, year, hour, minute, seconds, enableContextMenu, smooth, cursor, angleMode, max, min, mag, dist, exp, norm, map, lerp, random, constrain, log, sqrt, sq, pow, abs, floor, ceil, round, sin, cos, tan, acos, asin, atan, atan2, radians, degrees, fill, stroke, background, color, colorMode, backgroundMode, noStroke, noFill, comp, rect, clear, text, rectMode, ellipseMode, createFont, textAlign, textFont, textSize, strokeCap, strokeJoin, strokeWeight, pushMatrix, popMatrix, translate, rotate, scale, beginShape, vertex, curveVertex, bezierVertex, endShape, curve, bezier, arc, ellipse, quad, triangle, point, line, textWidth, textAscent, textDescent, get, mask, image, mousePressed, mouseReleased, mouseScrolled, mouseClicked, mouseOver, mouseOut, mouseMoved, mouseIsPressed, mouseButton, mouseX, mouseY, pmouseX, pmouseY, keyPressed, keyReleased, keyTyped, key, keyIsPressed, keyCode, resetMatrix, clear, bezierPoint, bezierTangent, fps, lerpColor, size, cw, ch, cmin, cmax, Canvas, imageMode, arcMode, noLoop, raf, delta, loadImage, then, draw_standin, startMask, resetMask, getImage, pathz, set
 //some setup [
 canvas = document.getElementsByTagName('canvas')[0] ?? new OffscreenCanvas(window.innerWidth, window.innerHeight)
 ctx = canvas.getContext('2d')
@@ -57,8 +57,6 @@ RADIANS = new String('rad')
 RGB = new String('rgb')
 HSL = new String('hsl')
 HEX = new String('hex')
-CSS = new String('css')
-RECT = new String('rect')
 left = new Number(0)
 right = new Number(2)
 cw = Math.round(width / 100)
@@ -77,8 +75,7 @@ data = {
 	start: 0,
 	flags: [],
 	comp: (font, size) => (data.flags.includes('bold') ? 'bold ' : '') + (data.flags.includes('italic') ? 'italic ' : '') + `${size}px ${font}`,
-	color: 'rgb',
-	background: 'css'
+	color: 'rgb'
 }
 //fps
 fps = 60
@@ -193,7 +190,14 @@ color = (...args) => {
 		return args[0]
 	}
 }
-background = (...args) => data.background === 'css' ? canvas.style.background = color(args) : (args[4] = [ctx.strokeStyle, ctx.fillStyle], ctx.strokeStyle = 'rgba(0, 0, 0, 0)', ctx.fillStyle = color(args), ctx.fillRect(0, 0, width, height), ctx.strokeStyle = args[4][0], ctx.fillStyle = args[4][1])
+background = (...args) => {
+	const cache = [ctx.strokeStyle, ctx.fillStyle]
+	ctx.strokeStyle = 'rgba(0, 0, 0, 0)', 
+	ctx.fillStyle = color(args)
+	ctx.fillRect(0, 0, width, height)
+	ctx.strokeStyle = cache[0]
+	ctx.fillStyle = cache[1]
+}
 fill = (...args) => ctx.fillStyle = color(args)
 stroke = (...args) => ctx.strokeStyle = color(args)
 lerpColor = (c,C,a)=>{
