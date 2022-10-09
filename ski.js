@@ -1,6 +1,6 @@
 /*
 ski.js
-version 1.5.1
+version 1.5.2
 
 Copyright 2022 thelegendski
 
@@ -32,7 +32,7 @@ credits:
 */
 
 //all variables at global scope
-var canvas, ctx, width, height, CORNER, CENTER, CLOSE, LEFT, RIGHT, UP, DOWN, SQUARE, ROUND, PROJECT, MITER, BEVEL, DEGREES, RADIANS, left, right, data, frameCount, frameRate, millis, debug, equal, day, month, year, hour, minute, seconds, enableContextMenu, smooth, cursor, angleMode, max, min, mag, dist, exp, norm, map, lerp, random, constrain, log, sqrt, sq, pow, abs, floor, ceil, round, sin, cos, tan, acos, asin, atan, atan2, radians, degrees, fill, stroke, background, color, noStroke, noFill, comp, rect, clear, text, rectMode, ellipseMode, createFont, textAlign, textFont, textSize, strokeCap, strokeJoin, strokeWeight, pushMatrix, popMatrix, translate, rotate, scale, beginShape, vertex, curveVertex, bezierVertex, endShape, curve, bezier, arc, ellipse, quad, triangle, point, line, textWidth, textAscent, textDescent, get, mask, image, mousePressed, mouseReleased, mouseScrolled, mouseClicked, mouseOver, mouseOut, mouseMoved, mouseIsPressed, mouseButton, mouseX, mouseY, pmouseX, pmouseY, keyPressed, keyReleased, keyTyped, key, keyIsPressed, keyCode, resetMatrix, clear, bezierPoint, bezierTangent, fps, lerpColor, size, cw, ch, cmin, cmax, Canvas, imageMode, arcMode, noLoop, raf, delta, loadImage, then, draw_standin, startMask, resetMask, getImage, pathz, set
+var canvas, ctx, width, height, CORNER, CENTER, CLOSE, LEFT, RIGHT, UP, DOWN, SQUARE, ROUND, PROJECT, MITER, BEVEL, DEGREES, RADIANS, RGB, HSL, HEX, CSS, RECT, left, right, data, frameCount, frameRate, millis, debug, equal, day, month, year, hour, minute, seconds, enableContextMenu, smooth, cursor, angleMode, max, min, mag, dist, exp, norm, map, lerp, random, constrain, log, sqrt, sq, pow, abs, floor, ceil, round, sin, cos, tan, acos, asin, atan, atan2, radians, degrees, fill, stroke, background, color, colorMode, backgroundMode, noStroke, noFill, comp, rect, clear, text, rectMode, ellipseMode, createFont, textAlign, textFont, textSize, strokeCap, strokeJoin, strokeWeight, pushMatrix, popMatrix, translate, rotate, scale, beginShape, vertex, curveVertex, bezierVertex, endShape, curve, bezier, arc, ellipse, quad, triangle, point, line, textWidth, textAscent, textDescent, get, mask, image, mousePressed, mouseReleased, mouseScrolled, mouseClicked, mouseOver, mouseOut, mouseMoved, mouseIsPressed, mouseButton, mouseX, mouseY, pmouseX, pmouseY, keyPressed, keyReleased, keyTyped, key, keyIsPressed, keyCode, resetMatrix, clear, bezierPoint, bezierTangent, fps, lerpColor, size, cw, ch, cmin, cmax, Canvas, imageMode, arcMode, noLoop, raf, delta, loadImage, then, draw_standin, startMask, resetMask, getImage, pathz, set
 //some setup [
 canvas = document.getElementsByTagName('canvas')[0] ?? new OffscreenCanvas(window.innerWidth, window.innerHeight)
 ctx = canvas.getContext('2d')
@@ -54,10 +54,15 @@ MITER = new String('miter')
 BEVEL = new String('bevel')
 DEGREES = new String('deg')
 RADIANS = new String('rad')
+RGB = new String('rgb')
+HSL = new String('hsl')
+HEX = new String('hex')
+CSS = new String('css')
+RECT = new String('rect')
 left = new Number(0)
 right = new Number(2)
-cw = (width / 100) | 0
-ch = (height / 100) | 0
+cw = Math.round(width / 100)
+ch = Math.round(height / 100)
 cmin = Math.min(cw, ch)
 cmax = Math.max(cw, ch)
 //]
@@ -71,7 +76,9 @@ data = {
 	millis: 0,
 	start: 0,
 	flags: [],
-	comp: (font, size) => (data.flags.includes('bold') ? 'bold ' : '') + (data.flags.includes('italic') ? 'italic ' : '') + `${size}px ${font}`
+	comp: (font, size) => (data.flags.includes('bold') ? 'bold ' : '') + (data.flags.includes('italic') ? 'italic ' : '') + `${size}px ${font}`,
+	color: 'rgb',
+	background: 'css'
 }
 //fps
 fps = 60
@@ -157,84 +164,46 @@ bezierPoint = (a,b,c,d,t)=>(1 - t) * (1 - t) * (1 - t) * a + 3 * (1 - t) * (1 - 
 bezierTangent = (a,b,c,d,t)=>(3 * t * t * (-a + 3 * b - 3 * c + d) + 6 * t * (a - 2 * b + c) + 3 * (-a + b))
 //]
 //colorin' [
-fill = (...args) => {
-	const [r, g, b, a] = args.length > 4 ? Object.assign(args, {length: 4}) : args
-	switch (args.length) {
-	case 1:
-		ctx.fillStyle = typeof r === 'string' ? r : `rgb(${r}, ${r}, ${r}, 255)`
-		break;
-	case 2:
-		ctx.fillStyle = `rgb(${r}, ${r}, ${r}, ${g / 255})`
-		break;
-	case 3:
-		ctx.fillStyle = `rgb(${r}, ${g}, ${b}, 255)`
-		break;
-	case 4:
-		ctx.fillStyle = `rgb(${r}, ${g}, ${b}, ${a / 255})`
-	}
-}
+colorMode = mode => data.color = mode
+backgroundMode = mode => data.background = mode
 color = (...args) => {
-	const [r, g, b, a] = args.length > 4 ? Object.assign(args, {length: 4}) : args
-	switch (args.length) {
-	case 1:
-		return `rgba(${r}, ${r}, ${r}, 255)`
-		break
-	case 2:
-		return `rgba(${r}, ${r}, ${r}, ${g / 255})`
-		break
-	case 3:
-		return `rgba(${r}, ${g}, ${b}, 255)`
-		break;
-	case 4:
-		return `rgba(${r}, ${g}, ${b}, ${a / 255})`
-		break
+	if(typeof args[0] === 'string' && (/(#|rgb|hsl)/).test(args[0])) return args[0]
+	args[0] instanceof Array && (args = args[0])
+	switch(data.color){
+	    case 'rgb':
+		const [r, g, b, a] = args.length > 4 ? Object.assign(args, {length: 4}) : args
+		switch (args.length) {
+			case 1:
+				return `rgba(${r}, ${r}, ${r}, 255)`
+				break
+			case 2:
+				return `rgba(${r}, ${r}, ${r}, ${g / 255})`
+				break
+			case 3:
+				return `rgba(${r}, ${g}, ${b}, 255)`
+				break
+			case 4:
+				return `rgba(${r}, ${g}, ${b}, ${a / 255})`
+		}
+	    break
+	    case 'hsl':
+		return `hsl(${args[0]}, ${args[1]}%, ${args[2]}%)`
+	    break
+	    case 'hex':
+		return args[0]
 	}
 }
-stroke = (...args) => {
-	const [r, g, b, a] = args.length > 4 ? Object.assign(args, {length: 4}) : args
-	switch (args.length) {
-	case 1:
-		ctx.strokeStyle = typeof r === 'string' ? r : `rgb(${r}, ${r}, ${r}, 255)`
-		break;
-	case 2:
-		ctx.strokeStyle = `rgb(${r}, ${r}, ${r}, ${g / 255})`
-		break;
-	case 3:
-		ctx.strokeStyle = `rgb(${r}, ${g}, ${b}, 255)`
-		break;
-	case 4:
-		ctx.strokeStyle = `rgb(${r}, ${g}, ${b}, ${a / 255})`
-	}
-}
-background = (...args) => {
-	const [r, g, b, a] = args.length > 4 ? Object.assign(args, {length: 4}) : args
-	let prev = [ctx.strokeStyle, ctx.fillStyle]
-	switch (args.length) {
-	case 1:
-		ctx.fillStyle = typeof r === 'string' ? r : `rgb(${r}, ${r}, ${r}, 255)`
-		break;
-	case 2:
-		ctx.fillStyle = `rgb(${r}, ${r}, ${r}, ${g / 255})`
-		break;
-	case 3:
-		ctx.fillStyle = `rgb(${r}, ${g}, ${b}, 255)`
-		break;
-	case 4:
-		ctx.fillStyle = `rgb(${r}, ${g}, ${b}, ${a / 255})`
-	}
-	noStroke()
-	ctx.fillRect(0, 0, width, height)
-	ctx.strokeStyle = prev[0]
-	ctx.fillStyle = prev[1]
-}
+background = (...args) => data.background === 'css' ? canvas.style.background = color(args) : (args[4] = [ctx.strokeStyle, ctx.fillStyle], ctx.strokeStyle = 'rgba(0, 0, 0, 0)', ctx.fillStyle = color(args), ctx.fillRect(0, 0, width, height), ctx.strokeStyle = args[4][0], ctx.fillStyle = args[4][1])
+fill = (...args) => ctx.fillStyle = color(args)
+stroke = (...args) => ctx.strokeStyle = color(args)
 lerpColor = (c,C,a)=>{
-	if (typeof C !== 'string' || typeof c !== 'string')
+	if (typeof C !== 'string' || typeof c !== 'string' || data.color !== RGB)
 		return
 	const [r,g,b,_a] = c.match(/\d{1,3}/g)
 	const [R,G,B,A] = C.match(/\d{1,3}/g)
 	return `rgba(${lerp(+r, +R, a)}, ${lerp(+g, +G, a)}, ${lerp(+b, +B, a)}, ${lerp(+_a, +A, a)})`
 }
-clear = ()=>ctx.clearRect(0, 0, window.innerWidth, window.innerHeight)
+clear = ()=>ctx.clearRect(0, 0, width, height)
 noStroke = ()=>ctx.strokeStyle = 'rgb(0, 0, 0, 0)'
 noFill = ()=>ctx.fillStyle = 'rgb(0, 0, 0, 0)'
 //]
