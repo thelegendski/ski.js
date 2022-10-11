@@ -491,13 +491,11 @@ raf = time=>{
 	var overflow = delta % ms
 	then = time - overflow
 	delta -= overflow
-	draw_standin()
+	draw_standin(time)
 	frameCount += 1
-	data.millis = performance.now - data.start
+	data.millis = performance.now() - data.start
 	fps = 1000 / delta
 }
-for (var i = requestAnimationFrame(()=>0); i--; )
-	cancelAnimationFrame(i)
 Object.defineProperty(window, "draw", {
     get() {
         return draw_standin
@@ -507,6 +505,10 @@ Object.defineProperty(window, "draw", {
         draw_standin = func
     },
     configurable: true
-});
+})
+
+//for the KA environment
+for (var i = requestAnimationFrame(()=>0); i--; )
+	cancelAnimationFrame(i)
 
 //easter egg?
