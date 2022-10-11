@@ -5,11 +5,11 @@ var println = (...args) => {
 	clearLogs = () => {
 		document.querySelectorAll('.line[name="ski"]').forEach(c => logger.removeChild(c))
 		logger.style.overflowY = 'hidden'
-		close.innerText = 'X'
+		closer.innerText = 'X'
 	}, 
 	style = document.createElement('style'), 
 	logger = document.createElement('div'), 
-    close = document.createElement('button')
+    	closer = document.createElement('button')
 
 document.head.appendChild(
     Object.assign(
@@ -104,9 +104,9 @@ logger.onclick = event => {
     }
 }
 
-close.setAttribute('class', 'close')
-close.setAttribute('name', 'ski')
-close.innerText = 'X'
+closer.setAttribute('class', 'close')
+closer.setAttribute('name', 'ski')
+closer.innerText = 'X'
 
-logger.appendChild(close)
+logger.appendChild(closer)
 document.body.appendChild(logger)
