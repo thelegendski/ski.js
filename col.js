@@ -1,5 +1,5 @@
 //my collisions object
-const col = {
+export default {
 	//rect-circle physics
 	rcp: (a, b, s, m = 1) => {
 		const x = constrain(a.x, m ? b.x - (b.width ?? b.w) / 2 : b.x, b.x + (b.width ?? b.w) / 2),
@@ -7,10 +7,10 @@ const col = {
 		s = s ?? a.size / 2
 		if (dist(a.x, a.y, x, y) <= s) {
 			const ang = atan2(a.x - x, a.y - y)
-			return {
-				x: x + sin(ang) * s,
-				y: y + cos(ang) * s
-			}
+			return [
+				x + sin(ang) * s,
+				y + cos(ang) * s
+			]
 		}
 	},
 	//circle-circle physics
@@ -18,10 +18,10 @@ const col = {
 		s = s ?? (a.size ?? a.s + b.size ?? b.s)
 		if (dist(a.x, a.y, b.x, b.y) <= s) {
 			const ang = atan2(a.y - b.y, a.x - b.x)
-			return {
-				x: b.x + cos(ang) * s,
-				y: b.y + sin(ang) * s
-			}
+			return [
+				b.x + cos(ang) * s,
+				b.y + sin(ang) * s
+			]
 		}
 	},
 	//circle-circle collisions
@@ -104,5 +104,3 @@ const col = {
 		return [c.x + cos(angle) * distance, c.y + sin(angle) * distance]
 	}
 }
-Object.freeze(col)
-window.col = col
