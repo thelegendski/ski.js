@@ -112,3 +112,4 @@ println = (...args) => {
     logger.style.height === '' && (logger.style.animation = '0.5s open forwards', logger.style.overflowY = 'auto', logger.style.display = "block")
 	logger.innerHTML += `<div class = 'line' name = 'ski'>${args.join(' ').trim()}</div>`
 }
+export {println, clearLogs}
