@@ -1,13 +1,5 @@
-/*
-print.js
-version 1.0.0
+var println, clearLogs, style, logger, close
 
-code is meant to be used with the ski.js library
-all code is made available and to be used under the MIT license. see here: http://opensource.org/licenses/mit-license.php
-intended for use in the Khan Academy environment. use outside of an educational environment is not intended.
-closely modeled after Processing.js/p5.js. no code, unless noted, has been taken from either.
-*/
-var println, clearLogs
 document.head.appendChild(
     Object.assign(
         document.createElement('link'), {
@@ -16,7 +8,8 @@ document.head.appendChild(
         }
     )
 )
-var style = document.createElement('style')
+
+style = document.createElement('style')
 style.innerHTML = `
 @keyframes close {
     from {
@@ -86,18 +79,30 @@ style.innerHTML = `
 .line[name='ski']{
 	margin: 1vmin;
 	z-index: 1e3;
+}
+body {
+    margin: 0
 }`
 document.head.appendChild(style)
-var logger = document.createElement('div')
+
+logger = document.createElement('div')
 logger.setAttribute('class', 'print')
 logger.setAttribute('name', 'ski')
-logger.onclick = event => event.path[0].classList.contains('close')) && void (clearLogs(), (logger.style.animation = '0.3s close forwards'))
-var close = document.createElement('button')
+logger.onclick = event => {
+    if(event.path[0].classList.contains('close')){
+        clearLogs()
+        logger.style.animation = '0.3s close forwards'
+    }
+}
+
+close = document.createElement('button')
 close.setAttribute('class', 'close')
 close.setAttribute('name', 'ski')
 close.innerText = 'X'
+
 logger.appendChild(close)
 document.body.appendChild(logger)
+
 clearLogs = ()=> {
     document.querySelectorAll('.line[name="ski"]').forEach(c => logger.removeChild(c))
     logger.style.overflowY = 'hidden'
@@ -105,16 +110,5 @@ clearLogs = ()=> {
 }
 println = (...args) => {
     logger.style.height === '' && (logger.style.animation = '0.5s open forwards', logger.style.overflowY = 'auto', logger.style.display = "block")
-	logger.innerHTML += `
-	<div class = 'line' name = 'ski'>
-        ${
-			(
-				msg=>{
-					let string = ''
-					msg.map(s=>string += `${s} `)
-					return string.trim()
-				}
-			)(Array.from(args))
-		}
-    </div>`
+	logger.innerHTML += `<div class = 'line' name = 'ski'>${args.join(' ').trim()}</div>`
 }
