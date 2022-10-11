@@ -1,4 +1,15 @@
-var println, clearLogs, style, logger, close
+var println = (...args) => {
+		logger.style.height === '' && (logger.style.animation = '0.5s open forwards', logger.style.overflowY = 'auto', logger.style.display = "block")
+		logger.innerHTML += `<div class = 'line' name = 'ski'>${args.join(' ').trim()}</div>`
+	}, 
+	clearLogs = () => {
+		document.querySelectorAll('.line[name="ski"]').forEach(c => logger.removeChild(c))
+		logger.style.overflowY = 'hidden'
+		close.innerText = 'X'
+	}, 
+	style = document.createElement('style'), 
+	logger = document.createElement('div'), 
+    close = document.createElement('button')
 
 document.head.appendChild(
     Object.assign(
@@ -9,7 +20,6 @@ document.head.appendChild(
     )
 )
 
-style = document.createElement('style')
 style.innerHTML = `
 @keyframes close {
     from {
@@ -85,7 +95,6 @@ body {
 }`
 document.head.appendChild(style)
 
-logger = document.createElement('div')
 logger.setAttribute('class', 'print')
 logger.setAttribute('name', 'ski')
 logger.onclick = event => {
@@ -95,21 +104,9 @@ logger.onclick = event => {
     }
 }
 
-close = document.createElement('button')
 close.setAttribute('class', 'close')
 close.setAttribute('name', 'ski')
 close.innerText = 'X'
 
 logger.appendChild(close)
 document.body.appendChild(logger)
-
-clearLogs = ()=> {
-    document.querySelectorAll('.line[name="ski"]').forEach(c => logger.removeChild(c))
-    logger.style.overflowY = 'hidden'
-    close.innerText = 'X'
-}
-println = (...args) => {
-    logger.style.height === '' && (logger.style.animation = '0.5s open forwards', logger.style.overflowY = 'auto', logger.style.display = "block")
-	logger.innerHTML += `<div class = 'line' name = 'ski'>${args.join(' ').trim()}</div>`
-}
-export {println, clearLogs}
