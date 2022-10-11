@@ -98,7 +98,7 @@ document.head.appendChild(style)
 logger.setAttribute('class', 'print')
 logger.setAttribute('name', 'ski')
 logger.onclick = event => {
-    if(event.path[0].classList.contains('close')){
+    if(event.target.classList.contains('close')){
         clearLogs()
         logger.style.animation = '0.3s close forwards'
     }
