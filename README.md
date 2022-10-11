@@ -1,3 +1,8 @@
 # ski.js
-simplified PJS for use on Khan Academy.
-if you find any bugs, please email the creator at thelegendski@proton.me.
+fast, efficient, tiny canvas library.
+
+closely modeled after <strong>[Processing.js](https://github.com/processing-js/processing-js)</strong>. no code, unless noted, has been taken from Processing.js.
+
+if you find any bugs, post it in the Issues tab.
+
+if you wish to contribute, simply create a PR.
