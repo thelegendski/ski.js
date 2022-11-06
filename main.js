@@ -10,7 +10,7 @@ var canvas, ctx, width, height, CORNER, CENTER, CLOSE, LEFT, RIGHT, UP, DOWN, SQ
 canvas = document.getElementsByTagName('canvas')[0] ?? new OffscreenCanvas(window.innerWidth, window.innerHeight)
 ctx = canvas.getContext('2d')
 
-function resizeCanvas();
+function resizeCanvas() {
 	width = canvas.width = window.innerWidth
 	height = canvas.height = window.innerHeight
 }
