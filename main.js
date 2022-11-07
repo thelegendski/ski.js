@@ -67,8 +67,10 @@ smooth = ()=>{
 }
 angleMode = mode=>data.angle = mode
 size = (w,h)=>{
+	width = w
 	canvas.width = w
 	canvas.style.width = `${w}px`
+	height = h
 	canvas.height = h
 	canvas.style.height = `${h}px`
 }
