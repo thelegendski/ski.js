@@ -1,21 +1,14 @@
 /*
   ski.js
-  version 1.6.0
+  version 1.6.3
 */
 
 //all variables at global scope
-var canvas, ctx, width, height, CORNER, CENTER, CLOSE, LEFT, RIGHT, UP, DOWN, SQUARE, ROUND, PROJECT, MITER, BEVEL, DEGREES, RADIANS, RGB, HSL, HEX, left, right, data, frameCount, frameRate, millis, debug, equal, day, month, year, hour, minute, seconds, enableContextMenu, smooth, cursor, angleMode, max, min, mag, dist, exp, norm, map, lerp, random, constrain, log, sqrt, sq, pow, abs, floor, ceil, round, sin, cos, tan, acos, asin, atan, atan2, radians, degrees, fill, stroke, background, color, colorMode, noStroke, noFill, comp, rect, clear, text, rectMode, ellipseMode, createFont, textAlign, textFont, textSize, strokeCap, strokeJoin, strokeWeight, pushMatrix, popMatrix, translate, rotate, scale, beginShape, vertex, curveVertex, bezierVertex, endShape, curve, bezier, arc, ellipse, quad, triangle, point, line, textWidth, textAscent, textDescent, get, mask, image, mousePressed, mouseReleased, mouseScrolled, mouseClicked, mouseOver, mouseOut, mouseMoved, mouseIsPressed, mouseButton, mouseX, mouseY, pmouseX, pmouseY, keyPressed, keyReleased, keyTyped, key, keyIsPressed, keyCode, resetMatrix, clear, bezierPoint, bezierTangent, fps, lerpColor, size, cw, ch, cmin, cmax, Canvas, imageMode, arcMode, noLoop, raf, delta, loadImage, then, draw_standin, startMask, resetMask, getImage, pathz, set
+var canvas, ctx, width, height, CORNER, CENTER, CLOSE, LEFT, RIGHT, UP, DOWN, SQUARE, ROUND, PROJECT, MITER, BEVEL, DEGREES, RADIANS, RGB, HSL, HEX, left, right, data, frameCount, frameRate, millis, debug, equal, day, month, year, hour, minute, seconds, enableContextMenu, smooth, cursor, angleMode, max, min, mag, dist, exp, norm, map, lerp, random, constrain, log, sqrt, sq, pow, abs, floor, ceil, round, sin, cos, tan, acos, asin, atan, atan2, radians, degrees, fill, stroke, background, color, colorMode, noStroke, noFill, comp, rect, clear, text, rectMode, ellipseMode, createFont, textAlign, textFont, textSize, strokeCap, strokeJoin, strokeWeight, pushMatrix, popMatrix, translate, rotate, scale, beginShape, vertex, curveVertex, bezierVertex, endShape, curve, bezier, arc, ellipse, quad, triangle, point, line, textWidth, textAscent, textDescent, get, mask, image, mousePressed, mouseReleased, mouseScrolled, mouseClicked, mouseOver, mouseOut, mouseMoved, mouseIsPressed, mouseButton, mouseX, mouseY, pmouseX, pmouseY, keyPressed, keyReleased, keyTyped, key, keyIsPressed, keyCode, resetMatrix, clear, bezierPoint, bezierTangent, fps, lerpColor, size, Canvas, imageMode, arcMode, noLoop, raf, delta, loadImage, then, draw_standin, startMask, resetMask, getImage, pathz, set
 
 //setup the canvas
 canvas = document.getElementsByTagName('canvas')[0] ?? new OffscreenCanvas(window.innerWidth, window.innerHeight)
 ctx = canvas.getContext('2d')
-
-function resizeCanvas() {
-	width = canvas.width = window.innerWidth
-	height = canvas.height = window.innerHeight
-}
-resizeCanvas();
-window.onresize = resizeCanvas();
 
 //create constants
 CORNER = 0
