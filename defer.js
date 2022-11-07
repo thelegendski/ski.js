@@ -30,10 +30,6 @@ HSL = 'hsl'
 HEX = 'hex'
 left = 0
 right = 2
-cw = Math.round(width / 100)
-ch = Math.round(height / 100)
-cmin = Math.min(cw, ch)
-cmax = Math.max(cw, ch)
 
 //data used by ski.js
 data = {
@@ -71,8 +67,10 @@ smooth = ()=>{
 }
 angleMode = mode=>data.angle = mode
 size = (w,h)=>{
+	width = w
 	canvas.width = w
 	canvas.style.width = `${w}px`
+	height = h
 	canvas.height = h
 	canvas.style.height = `${h}px`
 }
