@@ -66,13 +66,10 @@ smooth = ()=>{
 	ctx.imageSmoothingQuality = 'high'
 }
 angleMode = mode=>data.angle = mode
-size = (w,h)=>{
-	width = w
-	canvas.width = w
-	canvas.style.width = `${w}px`
-	height = h
-	canvas.height = h
-	canvas.style.height = `${h}px`
+size = (w, h, css)=>{
+	width = canvas.width = w
+	height = canvas.height = h
+	css && (canvas.style.width = `${w}px`, canvas.style.height = `${h}px`)
 }
 noLoop = ()=>draw = 0
 set = (...args) => {
@@ -502,6 +499,9 @@ Object.defineProperty(window, "draw", {
     },
     configurable: true
 })
+
+//quick resolution change
+size(window.innerWidth, window.innerHeight)
 
 //for the KA environment
 for (var i = requestAnimationFrame(()=>0); i--; )
