@@ -157,13 +157,13 @@ color = (...args) => {
 background = (...args) => {
 	const cache = [ctx.strokeStyle, ctx.fillStyle]
 	ctx.strokeStyle = 'rgba(0, 0, 0, 0)', 
-	ctx.fillStyle = color(args)
+	ctx.fillStyle = color(...args)
 	ctx.fillRect(0, 0, canvas.width, canvas.height)
 	ctx.strokeStyle = cache[0]
 	ctx.fillStyle = cache[1]
 }
-fill = (...args) => ctx.fillStyle = color(args)
-stroke = (...args) => ctx.strokeStyle = color(args)
+fill = (...args) => ctx.fillStyle = color(...args)
+stroke = (...args) => ctx.strokeStyle = color(...args)
 lerpColor = (c,C,a)=>{
 	if (typeof C !== 'string' || typeof c !== 'string' || data.color !== RGB)
 		return
