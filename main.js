@@ -30,10 +30,6 @@ HSL = 'hsl'
 HEX = 'hex'
 left = 0
 right = 2
-cw = Math.round(width / 100)
-ch = Math.round(height / 100)
-cmin = Math.min(cw, ch)
-cmax = Math.max(cw, ch)
 
 //data used by ski.js
 data = {
