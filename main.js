@@ -203,8 +203,8 @@ rect = (x,y,width,height,tl,tr,br,bl)=>{
 		if (ctx.strokeStyle === 'rgba(0, 0, 0, 0)')
 			ctx.translate(-0.5, -0.5)
 	} else {
-		ctx.strokeRect(x, y, width, height)
 		ctx.fillRect(x, y, width, height)
+		ctx.strokeRect(x, y, width, height)
 	}
 }
 clear = ()=>ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -212,13 +212,13 @@ text = (msg,x,y)=>{
 	msg = Object.is(typeof msg, 'string') ? msg : msg.toString()
 	if (msg.match('\n')) {
 		msg.split('\n').map((p,i)=>{
-			ctx.strokeText(p, x, y + ((i - ((msg.split('\n')).length - 1) / 2) * data.height))
 			ctx.fillText(p, x, y + ((i - ((msg.split('\n')).length - 1) / 2) * data.height))
+			ctx.strokeText(p, x, y + ((i - ((msg.split('\n')).length - 1) / 2) * data.height))
 		}
 		)
 	} else {
-		ctx.strokeText(msg, x, y)
 		ctx.fillText(msg, x, y)
+		ctx.strokeText(msg, x, y)
 	}
 }
 rectMode = (m)=>data['rect'] = m
@@ -259,8 +259,8 @@ endShape = (end)=>{
 	ctx.beginPath()
 	paths.forEach((path, index) => ctx[index < 1 && path.type === 'vertex' ? 'moveTo' : path.type === 'vertex' ? 'lineTo' : path.type === 'curve' ? 'quadraticCurveTo' : 'bezierCurveTo'](...path.points))
 	end && ctx.closePath()
-	ctx.stroke()
 	ctx.fill()
+	ctx.stroke()
 }
 curve = (...args) => {
 	if(args.length !== 6) return
