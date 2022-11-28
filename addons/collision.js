@@ -1,5 +1,5 @@
 //my collisions object
-export default {
+var col = {
 	//rect-circle physics
 	rcp: (a, b, s, m = 1) => {
 		const x = constrain(a.x, m ? b.x - (b.width ?? b.w) / 2 : b.x, b.x + (b.width ?? b.w) / 2),
@@ -107,3 +107,4 @@ export default {
 		]
 	}
 }
+window.col = col
