@@ -9,13 +9,13 @@ class Points {
             point.y += y
         }
     }
-    rotate (ang) {
+    rotate (ang, center = {x: 0, y: 0}) {
         ang *= -1
         for(let i = this.points.length; i--;){
             let point = this.points[i]
-            let distance = dist(0, 0, point.x, point.y), angle = atan2(point.y, point.x)
-            point.x = cos(angle + ang) * distance
-            point.y = sin(angle + ang) * distance
+            let distance = dist(center.x, center.y, point.x, point.y), angle = atan2(point.y - center.y, point.x - center.x)
+            point.x = cos(angle + ang) * distance + center.x
+            point.y = sin(angle + ang) * distance + center.y
         }
     }
     reflect (axis, val=0) {
