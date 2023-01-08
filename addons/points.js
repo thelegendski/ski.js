@@ -1,3 +1,7 @@
+Object.prototype.toString = function() {
+    return JSON.stringify(this)
+}
+
 class Points {
     constructor(arr){
         this.points = arr
