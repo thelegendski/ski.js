@@ -1,5 +1,5 @@
 # ski.js
-tiny, fast, efficient, easy-to-use canvas library for the web
+tiny [minified version is 10.69kb], fast, efficient, easy-to-use canvas library for the web
 
 closely modeled after <strong>[Processing.js](https://github.com/processing-js/processing-js)</strong>. no code, unless noted, has been taken from Processing.js.
 
