@@ -66,7 +66,7 @@ const getWeight = kernel => {
 const determineShader = (name, val) => {
     //utility function
     const constrain = (a, b, c) => Math.min(Math.max(a, b), c)
-    switch(name){
+    switch(name.toLowerCase()){
         case 'opaque':    
             return `
             vec4 tex = texture2D(Sampler, texture);
