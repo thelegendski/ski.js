@@ -1,6 +1,6 @@
 /*
   ski.js
-  version 1.6.3
+  version 1.7.2
 */
 
 //all variables at global scope
