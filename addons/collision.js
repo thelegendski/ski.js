@@ -15,7 +15,8 @@ var col = {
 	},
 	//circle-circle physics
 	ccp: (a, b, s) => {
-		if(col.cc(a, b, s)){
+		s = s ?? ((a.size ?? a.s) + (b.size ?? b.s)) / 2
+		if (dist(a.x, a.y, b.x, b.y) <= s) {
 			const ang = atan2(a.y - b.y, a.x - b.x)
 			return [
 				b.x + cos(ang) * s,
