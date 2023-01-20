@@ -78,7 +78,7 @@ var col = {
 		d.x /= DIST
 		d.y /= DIST
 
-		if(o <= 0) return {x: c.x - d.x * o, y: c.y - d.y * o};
+		if(o <= 0) return [c.x - d.x * o, c.y - d.y * o]
 	},
 }
 window.col = col
