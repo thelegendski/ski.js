@@ -1,4 +1,4 @@
-const col = {
+var col = {
 	//rect-circle physics
 	rcp (a,b,s,m=1) {
 		const x = constrain(a.x, m ? b.x - (b.width ?? b.w) / 2 : b.x, b.x + (b.width ?? b.w) / 2), y = constrain(a.y, b.y - (b.height ?? b.h) / 2, b.y + (b.height ?? b.h) / 2)
@@ -81,3 +81,4 @@ const col = {
 		if(o <= 0) return {x: c.x - d.x * o, y: c.y - d.y * o};
 	},
 }
+window.col = col
