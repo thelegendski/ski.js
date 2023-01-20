@@ -29,7 +29,7 @@ var col = {
 	lli (a,b,c,d) {
 		if(!col.ll(a, b, c, d)) return
 		const s = (((b.x - a.x) * (a.y - c.y)) + ((b.y - a.y) * c.x) - ((b.y - a.y) * a.x)) / (((b.x - a.x) * (d.y - c.y)) - ((b.y - a.y) * (d.x - c.x)))
-		return [c.x + (d.x - c.x) * s, c.y + (d.y - c.y) * s]
+		return {x: c.x + (d.x - c.x) * s, y: c.y + (d.y - c.y) * s}
 	},
 	//circle-line collisions [ol']
 	lc (a,b,c) {
@@ -69,8 +69,8 @@ var col = {
 	clp (c, a, b, t=1) {
 		const closest = col.cpl(c, a, b),
 		d = {
-			x: c.x - closest.x,
-			y: c.y - closest.y
+			x: c.x - closest[0],
+			y: c.y - closest[1]
 		}, 
 		DIST = sqrt(d.x * d.x + d.y * d.y),
 		o = DIST - t - ((c.s ?? c.size) / 2)
