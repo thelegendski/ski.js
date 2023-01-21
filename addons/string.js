@@ -1,4 +1,4 @@
-const randomString = val => {
+function randomString (val) {
     let result = '', 
         consonants = ['b', 'c', 'd', 'f', 'g', 'h', 
         'j', 'k', 'l', 'm', 'n', 'p', 'q', 'r', 's', 
@@ -11,8 +11,7 @@ const randomString = val => {
             str += (random() < 0.5 ? 'v' : 'c')
     else str = val
 
-    for(const char of str) 
-        result += char === 'v' ? vowels[random(6) | 0] : consonants[random(21) | 0]
+    [...str].forEach(char => result += char === 'v' ? vowels[random(6) | 0] : consonants[random(21) | 0])
 
     return result
 }
