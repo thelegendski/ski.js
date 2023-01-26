@@ -128,7 +128,7 @@ bezierTangent = (a,b,c,d,t)=>(3 * t * t * (-a + 3 * b - 3 * c + d) + 6 * t * (a 
 //graphix
 colorMode = mode => data.color = mode
 color = (...args) => {
-	if(typeof args[0] === 'string' && args.length < 1 && (/(#|rgb|hsl)/).test(args[0])) return args[0]
+	if(typeof args[0] === 'string' && args.length <= 1 && (/(#|rgb|hsl)/).test(args[0])) return args[0]
 	args[0] instanceof Array && (args = args[0])
 	if(typeof args[1] === 'number' && (/rgb/).test(args[0])){
 	    let cache = args[0].match(/\d{1,3}/g)
