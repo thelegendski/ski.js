@@ -6,12 +6,13 @@ function randomString (val) {
         vowels = ['a', 'e', 'i', 'o', 'u', 'y'], 
         str = ''
 
-    if(typeof val === 'number') 
+    if(typeof val === 'number') {
         for(let i = val; i--;) 
             str += (random() < 0.5 ? 'v' : 'c')
+    }
     else str = val
 
-    [...str].forEach(char => result += char === 'v' ? vowels[random(6) | 0] : consonants[random(21) | 0])
+    str.split('').forEach(char => result += char === 'v' ? vowels[random(6) | 0] : consonants[random(21) | 0])
 
     return result
-}
+} 
