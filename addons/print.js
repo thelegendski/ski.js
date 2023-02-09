@@ -47,7 +47,7 @@ style.innerHTML = `
 	height: 0vh;
 	resize: vertical;
 	color: rgb(245, 245, 245, 0.5);
-	overflow-x: hidden;
+	overflow-x: auto;
 	overflow-y: auto;
 	font-size: 4vmin;
 	font-family: "Josefin Sans";
