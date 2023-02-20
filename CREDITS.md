@@ -14,4 +14,6 @@
 
 <strong>[HSstudent16](https://github.com/HSstudent16)</strong> - for the circle-line physix/collision algorithm which has been modified & for fixin' a bug in <code>print.js</code>
 
-i mean credit ski for makin' the library lol.
+<strong>[TheDark](https://github.com/99TheDark)</strong> - for the mouseX & mouseY calculations and the suggestion for pushMatrix/popMatrix that did not behave like pushStyle/popStyle
+
+i mean credit <strong>[ski](https://github.com/thelegendski)</strong> for makin' the library lol.
