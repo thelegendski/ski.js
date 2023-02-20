@@ -1,112 +1,103 @@
 var println = (...args) => {
-		logger.style.height === '' && (logger.style.animation = '0.5s open forwards', logger.style.overflowY = 'auto', logger.style.display = "block")
-		logger.innerHTML += `<div class = 'line' name = 'ski'>${args.join(' ').trim()}</div>`
-	}, 
-	clearLogs = () => {
-		document.querySelectorAll('.line[name="ski"]').forEach(c => logger.removeChild(c))
-		logger.style.overflowY = 'hidden'
-		closer.innerText = 'X'
-	}, 
-	style = document.createElement('style'), 
-	logger = document.createElement('div'), 
-    	closer = document.createElement('button')
+    closer.style.display === "none" && [...logger.childNodes].forEach(child => child.classList.contains('line') && logger.removeChild(child))
+    logger.style.animation = "0.3s forwards open"
+    closer.style.display = "flex"
+    args.forEach(arg => {
+        const div = document.createElement('div')
+        div.setHTML(arg.toString(), new Sanitizer({allowElements: ['a']}))
+        div.setAttribute('class', 'line')
+        div.setAttribute('display', 'flex')
+        div.setAttribute('width', '100vw')
+        logger.appendChild(div)
+    })
+},
+clearLogs = () => {
+    logger.style.animation = "0.5s forwards close"
+    closer.style.display = "none"
+}
 
-document.head.appendChild(
-    Object.assign(
-        document.createElement('link'), {
-            rel: 'stylesheet', 
-            href: 'https://fonts.googleapis.com/css?family=Varela+Round|Josefin+Sans'
-        }
-    )
-)
-
+const logger = document.createElement('div'),
+      closer = document.createElement('span'),
+      style  = document.createElement('style')
+      
 style.innerHTML = `
 @keyframes close {
     from {
         height: 20vh;
+        overflow: auto;
+        padding: 1vmin;
     }
     to {
         height: 0vh;
+        overflow: hidden;
+        padding: 0vmin;
     }
 }
 @keyframes open {
     from {
         height: 0vh;
+        overflow: hidden;
+        padding: 0vmin;
     }
     to {
         height: 20vh;
+        overflow: auto;
+        padding: 1vmin;
     }
 }
-.print[name='ski']{
-	display: none;
-	position: fixed;
-	top: 0;
-	background: rgb(0, 0, 0, 0.5);
-	z-index: 1e3;
-	width: 100vw;
-	height: 0vh;
-	resize: vertical;
-	color: rgb(245, 245, 245, 0.5);
-	overflow-x: auto;
-	overflow-y: auto;
-	font-size: 4vmin;
-	font-family: "Josefin Sans";
-	user-select: text;
+@font-face {
+    font-family: "println console";
+    src: url(https://fonts.gstatic.com/s/nunito/v25/XRXI3I6Li01BKofiOc5wtlZ2di8HDFwmdTQ3jw.woff2) format('woff2');
 }
-.close[name='ski']{
-	position: absolute;
-	top: 0;
-	right: 0;
-	margin-top: 1vh;
-	margin-right: 1vw;
-	width: 6vmin;
-	height: 6vmin;
-	background: rgb(245, 245, 245, 0.35);
-	border: 0.5vmin solid rgb(245, 245, 245, 0.5);
-	border-radius: 90px;
-	padding-left: 1vw;
-	padding-top: 0.765vh;
-	cursor: pointer;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	text-align: center;
-	font-size: 4vmin;
-	color: rgb(245, 245, 245, 0.5);
-	z-index: 1e3;
-	transition: 0.5s;
-	font-family: 'Varela Round';
-	user-select: none;
+.logger {
+    background: rgba(0, 0, 0, 0.5);
+    width: 100vw;
+    height: 0vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    font-family: "println console";
+    font-size: 3.5vmin;
+    color: rgba(250, 250, 250);
+    z-index: 1e3;
+    box-sizing: border-box;
 }
-.close[name='ski']:hover {
-	background: rgb(245, 100, 100, 0.625);
-	transition: 0.3s;
+.close {
+    position: fixed;
+    top: 0;
+    right: 0;
+    margin: 1vmin;
+    width: 6vmin;
+    height: 6vmin;
+    border-radius: 90px;
+    border: 3px solid rgba(0, 0, 0, 0.25);
+    background: rgba(0, 0, 0, 0.35);
+    color: rgba(250, 250, 250, 0.75);
+    cursor: pointer;
+    z-index: 2e3;
+    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 5vmin;
+    user-select: none;
+    transition: 0.5s;
+    display: none;
 }
-.close[name='ski']:active {
-	background: rgb(245, 100, 100, 0.75);
-	transition: 0.3s;
+.close:hover {
+    background: rgba(200, 25, 0, 0.65);
+    transition: 0.3s;
 }
-.line[name='ski']{
-	margin: 1vmin;
-	z-index: 1e3;
+.close:active {
+    background: rgba(200, 25, 0, 0.85);
+    transition: 0.3s;
 }
-body {
-    margin: 0
-}`
-document.head.appendChild(style)
-
-logger.setAttribute('class', 'print')
-logger.setAttribute('name', 'ski')
-logger.onclick = event => {
-    if(event.target.classList.contains('close')){
-        clearLogs()
-        logger.style.animation = '0.3s close forwards'
-    }
-}
-
+`
 closer.setAttribute('class', 'close')
-closer.setAttribute('name', 'ski')
-closer.innerText = 'X'
+closer.setHTML('X')
+logger.setAttribute('class', 'logger')
+logger.onclick = e => e.target.classList.contains('close') && clearLogs()
 
+document.head.appendChild(style)
 logger.appendChild(closer)
 document.body.appendChild(logger)
