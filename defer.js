@@ -1,19 +1,21 @@
 /*
   ski.js
-  version 1.6.3
+  version 1.9.0
 */
 
 //all variables at global scope
-var canvas, ctx, width, height, CORNER, CENTER, CLOSE, LEFT, RIGHT, UP, DOWN, SQUARE, ROUND, PROJECT, MITER, BEVEL, DEGREES, RADIANS, RGB, HSL, HEX, left, right, data, frameCount, frameRate, millis, debug, equal, day, month, year, hour, minute, seconds, enableContextMenu, smooth, cursor, angleMode, max, min, mag, dist, exp, norm, map, lerp, random, constrain, log, sqrt, sq, pow, abs, floor, ceil, round, sin, cos, tan, acos, asin, atan, atan2, radians, degrees, fill, stroke, background, color, colorMode, noStroke, noFill, comp, rect, clear, text, rectMode, ellipseMode, createFont, textAlign, textFont, textSize, strokeCap, strokeJoin, strokeWeight, pushMatrix, popMatrix, translate, rotate, scale, beginShape, vertex, curveVertex, bezierVertex, endShape, curve, bezier, arc, ellipse, quad, triangle, point, line, textWidth, textAscent, textDescent, get, mask, image, mousePressed, mouseReleased, mouseScrolled, mouseClicked, mouseOver, mouseOut, mouseMoved, mouseIsPressed, mouseButton, mouseX, mouseY, pmouseX, pmouseY, keyPressed, keyReleased, keyTyped, key, keyIsPressed, keyCode, resetMatrix, clear, bezierPoint, bezierTangent, fps, lerpColor, size, Canvas, imageMode, arcMode, noLoop, raf, delta, loadImage, then, draw_standin, startMask, resetMask, getImage, pathz, set, loadFont
+var canvas, ctx, width, height, CORNER, CENTER, CLOSE, SPACE, LEFT, RIGHT, UP, DOWN, SQUARE, ROUND, PROJECT, MITER, BEVEL, DEGREES, RADIANS, PI, TAU, RGB, HSL, HEX, LEFT_BUTTON, RIGHT_BUTTON, frameCount, frameRate, millis, debug, equal, day, month, year, hour, minute, seconds, enableContextMenu, enableResize, smooth, cursor, angleMode, max, min, mag, dist, exp, norm, map, lerp, random, constrain, log, sqrt, sq, pow, abs, floor, ceil, round, sin, cos, tan, acos, asin, atan, atan2, radians, degrees, fill, stroke, background, color, colorMode, noStroke, noFill, comp, rect, clear, text, rectMode, ellipseMode, createFont, textAlign, textFont, textSize, strokeCap, strokeJoin, strokeWeight, pushMatrix, popMatrix, translate, rotate, scale, beginShape, vertex, curveVertex, bezierVertex, endShape, curve, bezier, arc, ellipse, quad, triangle, point, line, textWidth, textAscent, textDescent, get, mask, image, mousePressed, mouseReleased, mouseScrolled, mouseClicked, mouseOver, mouseOut, mouseMoved, mouseIsPressed, mouseButton, mouseX, mouseY, pmouseX, pmouseY, keyPressed, keyReleased, keyTyped, key, keyIsPressed, keyCode, resetMatrix, clear, bezierPoint, bezierTangent, fps, lerpColor, size, imageMode, arcMode, noLoop, raf, delta, loadImage, then, draw_standin, startMask, resetMask, getImage, shapePathz, set, loadFont, noSmooth, skiJSData, textLeading, pushStyle, popStyle
 
 //setup the canvas
 canvas = new OffscreenCanvas(window.innerWidth, window.innerHeight)
 ctx = canvas.getContext('2d')
 
+
 //create constants
 CORNER = 0
 CENTER = 1
-CLOSE = !0
+CLOSE = true
+SPACE = 32
 LEFT = 37
 RIGHT = 39
 UP = 38
@@ -25,47 +27,62 @@ MITER = 'miter'
 BEVEL = 'bevel'
 DEGREES = 'deg'
 RADIANS = 'rad'
+PI = Math.PI
+TAU = PI * 2
 RGB = 'rgb'
 HSL = 'hsl'
 HEX = 'hex'
-left = 0
-right = 2
+LEFT_BUTTON = 0
+RIGHT_BUTTON = 2
 
 //data used by ski.js
-data = {
-	rect: 1,
-	ellipse: 1,
+skiJSData = {
+	rect: CENTER,
+	ellipse: CENTER,
+	arc: CENTER,
+	image: CENTER,
+	angle: DEGREES,
+	color: RGB,
+	leading: 0,
 	height: 12,
-	angle: 'deg',
 	rate: 60,
 	millis: 0,
 	start: 0,
 	flags: [],
-	comp: (font, size) => (data.flags.includes('bold') ? 'bold ' : '') + (data.flags.includes('italic') ? 'italic ' : '') + `${size}px ${font}`,
-	color: 'rgb'
+	fontString (font, size) {
+	    return (this.flags.includes('bold') ? 'bold ' : '') + (this.flags.includes('italic') ? 'italic ' : '') + `${size}px ${font}`
+	},
+	pos (type, x, y, w, h) {
+	    return type !== "ellipse" ? this[type] < 1 ? [x, y] : [x - w / 2, y - h / 2] : this[type] < 1 ? [x + w / 2, y + w / 2] : [x, y]
+	},
+	matrixToArray (matrix) {
+	    return ['a', 'b', 'c', 'd', 'e', 'f'].map(el => matrix[el])
+	},
+	matrices: []
 }
 
 //fps
 fps = 60
 //vector array for shapez
-pathz = []
+shapePathz = []
 
 //miscellaneous
 debug = (...args) => console.debug(...args)
 equal = (...args) => console.assert(...args)
-day = ()=>new Date().getDate()
-month = ()=>new Date().getMonth()
-year = ()=>new Date().getYear()
-hour = ()=>new Date().getHours()
-minute = ()=>new Date().getMinutes()
-seconds = ()=>new Date().getSeconds()
+day = ()=>(new Date).getDate()
+month = ()=>(new Date).getMonth()
+year = ()=>(new Date).getYear()
+hour = ()=>(new Date).getHours()
+minute = ()=>(new Date).getMinutes()
+seconds = ()=>(new Date).getSeconds()
 enableContextMenu = ()=>canvas.oncontextmenu = true
+enableResize = () =>  0//window.onresize = () => size(window.innerWidth, window.innerHeight, true);
 cursor = name=>document.body.style.cursor = name
 smooth = ()=>{
 	ctx.imageSmoothingEnabled = true
 	ctx.imageSmoothingQuality = 'high'
 }
-angleMode = mode=>data.angle = mode
+angleMode = mode=>skiJSData.angle = mode
 size = (w, h, css)=>{
 	width = canvas.width = w
 	height = canvas.height = h
@@ -113,28 +130,28 @@ abs = n=>n < 0 ? -n : n
 floor = n=>n | 0
 ceil = n=>(n | 0) + 1
 round = n=>n - (n | 0) < 0.5 ? (n | 0) : (n | 0) + 1
-sin = ang=>Math.sin(degrees(ang))
-cos = ang=>Math.cos(degrees(ang))
-tan = ang=>Math.tan(degrees(ang))
-acos = ang=>Math.acos(degrees(ang))
-asin = ang=>Math.asin(degrees(ang))
-atan = ang=>Math.atan(degrees(ang))
-radians = ang=>ang * (180 / Math.PI)
-degrees = ang=>ang * (Math.PI / 180)
-atan2 = (y,x)=>radians(Math.atan2(y, x))
+sin = ang=>Math.sin(skiJSData.angle === "deg" ? degrees(ang) : ang)
+cos = ang=>Math.cos(skiJSData.angle === "deg" ? degrees(ang) : ang)
+tan = ang=>Math.tan(skiJSData.angle === "deg" ? degrees(ang) : ang)
+acos = ang=>Math.acos(skiJSData.angle === "deg" ? degrees(ang) : ang)
+asin = ang=>Math.asin(skiJSData.angle === "deg" ? degrees(ang) : ang)
+atan = ang=>Math.atan(skiJSData.angle === "deg" ? degrees(ang) : ang)
+radians = ang=>ang * (180 / PI)
+degrees = ang=>ang * (PI / 180)
+atan2 = (y,x)=>skiJSData.angle === "deg" ? radians(Math.atan2(y, x)) : Math.atan2(x, y)
 bezierPoint = (a,b,c,d,t)=>(1 - t) * (1 - t) * (1 - t) * a + 3 * (1 - t) * (1 - t) * t * b + 3 * (1 - t) * t * t * c + t * t * t * d
 bezierTangent = (a,b,c,d,t)=>(3 * t * t * (-a + 3 * b - 3 * c + d) + 6 * t * (a - 2 * b + c) + 3 * (-a + b))
 
 //graphix
-colorMode = mode => data.color = mode
+colorMode = mode => skiJSData.color = mode
 color = (...args) => {
-	if(typeof args[0] === 'string' && args.length < 1 && (/(#|rgb|hsl)/).test(args[0])) return args[0]
+	if(typeof args[0] === 'string' && args.length <= 1 && (/(#|rgb|hsl)/).test(args[0])) return args[0]
 	args[0] instanceof Array && (args = args[0])
 	if(typeof args[1] === 'number' && (/rgb/).test(args[0])){
 	    let cache = args[0].match(/\d{1,3}/g)
 	    args = [cache[0], cache[1], cache[2], args[1]]
 	}
-	switch(data.color){
+	switch(skiJSData.color){
 	    case 'rgb':
 		const [r, g, b, a] = args.length > 4 ? Object.assign(args, {length: 4}) : args
 		switch (args.length) {
@@ -163,13 +180,12 @@ background = (...args) => {
 	ctx.strokeStyle = 'rgba(0, 0, 0, 0)', 
 	ctx.fillStyle = color(...args)
 	ctx.fillRect(0, 0, canvas.width, canvas.height)
-	ctx.strokeStyle = cache[0]
-	ctx.fillStyle = cache[1]
+	ctx.strokeStyle = cache[0], ctx.fillStyle = cache[1]
 }
 fill = (...args) => ctx.fillStyle = color(...args)
 stroke = (...args) => ctx.strokeStyle = color(...args)
 lerpColor = (c,C,a)=>{
-	if (typeof C !== 'string' || typeof c !== 'string' || data.color !== RGB)
+	if (typeof C !== 'string' || typeof c !== 'string' || skiJSData.color !== RGB)
 		return
 	const [r,g,b,_a] = c.match(/\d{1,3}/g)
 	const [R,G,B,A] = C.match(/\d{1,3}/g)
@@ -178,9 +194,8 @@ lerpColor = (c,C,a)=>{
 clear = ()=>ctx.clearRect(0, 0, width, height)
 noStroke = ()=>ctx.strokeStyle = 'rgb(0, 0, 0, 0)'
 noFill = ()=>ctx.fillStyle = 'rgb(0, 0, 0, 0)'
-comp = (x,y,w,h,draw)=>data[draw] > 0 ? [x - w / 2, y - h / 2] : [x, y]
 rect = (x,y,width,height,tl,tr,br,bl)=>{
-	[x,y] = comp(x, y, width, height, 'rect')
+	[x,y] = skiJSData.pos('rect', x, y, width, height)
 	if (tl) {
 		const w = width / 2
 		  , h = height / 2
@@ -206,18 +221,19 @@ rect = (x,y,width,height,tl,tr,br,bl)=>{
 		endShape()
 		if (ctx.strokeStyle === 'rgba(0, 0, 0, 0)')
 			ctx.translate(-0.5, -0.5)
-	} else {
+	} 
+	else {
 		ctx.fillRect(x, y, width, height)
 		ctx.strokeRect(x, y, width, height)
 	}
 }
 clear = ()=>ctx.clearRect(0, 0, canvas.width, canvas.height)
 text = (msg,x,y)=>{
-	msg = Object.is(typeof msg, 'string') ? msg : msg.toString()
+	msg = msg.toString()
 	if (msg.match('\n')) {
 		msg.split('\n').map((p,i)=>{
-			ctx.fillText(p, x, y + ((i - ((msg.split('\n')).length - 1) / 2) * data.height))
-			ctx.strokeText(p, x, y + ((i - ((msg.split('\n')).length - 1) / 2) * data.height))
+			ctx.fillText(p, x, y + ((i - ((msg.split('\n')).length - 1) / 2) * (skiJSData.height + skiJSData.leading)))
+			ctx.strokeText(p, x, y + ((i - ((msg.split('\n')).length - 1) / 2) * (skiJSData.height + skiJSData.leading)))
 		}
 		)
 	} else {
@@ -225,40 +241,50 @@ text = (msg,x,y)=>{
 		ctx.strokeText(msg, x, y)
 	}
 }
-rectMode = (m)=>data['rect'] = m
-ellipseMode = (m)=>data['ellipse'] = m
-arcMode = m=>data['arc'] = m
-imageMode = m=>data['image'] = m
+rectMode = (m)=>skiJSData.rect = m
+ellipseMode = (m)=>skiJSData.ellipse = m
+arcMode = m=>skiJSData.arc = m
+imageMode = m=>skiJSData.image = m
 textAlign = (x,y)=>{
 	ctx.textAlign = x <= 0 ? 'start' : 'center'
-	ctx.textBaseline = y <= 0 ? 'alphabetic' : 'middle'
+	ctx.textBaseline = y <= 0 ? 'hanging' : 'middle'
 }
-createFont = (font)=>font
-textSize = (size) => data.height = size && (ctx.font = data.comp(data.font, size))
-textFont = (font, size=data.height) => {
-	data.height !== size && (data.height = size)
-	data.flags = []
-	if ((/bold/i).test(font)) (data.flags.push('bold'), font = font.replace('bold', ''))
-	if ((/italic/i).test(font)) (data.flags.push('italic'), font = font.replace('italic', ''))
+createFont = font=>font
+textSize = size => skiJSData.height = size && (ctx.font = skiJSData.fontString(skiJSData.font, size))
+textFont = (font, size=skiJSData.height) => {
+	skiJSData.height !== size && (skiJSData.height = size)
+	skiJSData.flags = []
+	if ((/bold/i).test(font)) (skiJSData.flags.push('bold'), font = font.replace('bold', ''))
+	if ((/italic/i).test(font)) (skiJSData.flags.push('italic'), font = font.replace('italic', ''))
 	font = font.trim()
-	data.font = font
-	ctx.font = data.comp(font, size)
+	skiJSData.font = font
+	ctx.font = skiJSData.fontString(font, size)
 }
+textLeading = val => skiJSData.leading = val
 strokeCap = mode=>ctx.lineCap = mode
 strokeJoin = mode=>ctx.lineJoin = mode
-strokeWeight = weight=>ctx.lineWidth = Number(weight)
-pushMatrix = ()=>ctx.save()
-popMatrix = ()=>ctx.restore()
+strokeWeight = weight=>ctx.lineWidth = weight
+pushStyle = ()=>ctx.save()
+popStyle = ()=>ctx.restore()
+pushMatrix = ()=>{
+    const {matrices: arr, matrixToArray: convert} = skiJSData
+    arr.push(convert(ctx.getTransform()))
+}
+popMatrix = () => ctx.setTransform(DOMMatrix.fromFloat32Array(new Float32Array(skiJSData.matrices.pop())))
 resetMatrix = popMatrix
-translate = (x,y)=>ctx.translate(x, y)
-rotate = ang=>ctx.rotate(degrees(ang))
-scale = (w,h)=>ctx.scale(w, h ? h : w)
-beginShape = ()=>pathz = []
-vertex = (x,y)=>pathz.push({type: 'vertex', points: [x, y]})
-curveVertex = (cx,cy,x,y)=>pathz.push({type: 'curve', points: [cx, cy, x, y]})
-bezierVertex = (cx,cy,cX,cY,x,y)=>pathz.push({type: 'bezier', points: [cx, cy, cX, cY, x, y]})
+translate = (x,y) => ctx.transform(1, 0, 0, 1, x, y)
+rotate = ang => {
+    ang = degrees(ang)
+    const cos = Math.cos, sin = Math.sin
+    ctx.transform(cos(ang), sin(ang), -sin(ang), cos(ang), 0, 0)
+}
+scale = (w,h) => ctx.transform(w, 0, 0, h ? h : w, 0, 0)
+beginShape = ()=>shapePathz = []
+vertex = (x,y)=>shapePathz.push({type: 'vertex', points: [x, y]})
+curveVertex = (cx,cy,x,y)=>shapePathz.push({type: 'curve', points: [cx, cy, x, y]})
+bezierVertex = (cx,cy,cX,cY,x,y)=>shapePathz.push({type: 'bezier', points: [cx, cy, cX, cY, x, y]})
 endShape = (end)=>{
-    const paths = pathz
+    const paths = shapePathz
 	if (paths.length < 2 || paths[0].type !== 'vertex') return
 	ctx.beginPath()
 	paths.forEach((path, index) => ctx[index < 1 && path.type === 'vertex' ? 'moveTo' : path.type === 'vertex' ? 'lineTo' : path.type === 'curve' ? 'quadraticCurveTo' : 'bezierCurveTo'](...path.points))
@@ -283,7 +309,7 @@ bezier = (...args) => {
 	endShape()
 }
 arc = (x,y,w,h,start,stop,close=false)=>{
-	if (data.arc) {
+	if (skiJSData.arc) {
 		x += w / 2
 		y += h / 2
 	}
@@ -320,13 +346,13 @@ triangle = (x,y,X,Y,_x,_y)=>{
 	endShape(CLOSE)
 }
 point = (x,y)=>{
-	if (!Object.is(ctx.strokeStyle, 'rgba(0, 0, 0, 0)')) {
-		let style = ctx.strokeStyle, old = ctx.fillStyle
+	if (ctx.strokeStyle !== 'rgba(0, 0, 0, 0)') {
+		const cache = [ctx.strokeStyle, ctx.fillStyle]
 		noStroke()
-		ctx.fillStyle = style
+		ctx.fillStyle = cache[0]
 		ellipse(x, y, ctx.lineWidth, ctx.lineWidth)
-		ctx.strokeStyle = style
-		ctx.fillStyle = old
+		ctx.strokeStyle = cache[0]
+		ctx.fillStyle = cache[1]
 	}
 }
 line = (x,y,X,Y)=>{
@@ -343,50 +369,43 @@ textWidth = (txt)=>{
 }
 textAscent = ()=>ctx.measureText('a').fontBoundingBoxAscent
 textDescent = ()=>ctx.measureText('a').fontBoundingBoxDescent
-Canvas = (w,h)=>{
-	const C = Object.assign(document.createElement('canvas'), {
-		width: w,
-		height: h
-	})
-	return [C, C.getContext('2d')]
-}
+textLeading = num => skiJSData.leading = num
 get = (...args) => {
 	const [x, y, w, h, src] = args
-	let canv, data, context, Canv
 	switch (args.length) {
-	case 0:
-		get(0, 0, width, height)
-		break
-	case 2:
-		data = ctx.getImageData(x, y, 1, 1).data
-		return color(data[0], data[1], data[2], data[3])
-		break
-	case 3:
-		Canv = Canvas(w.width, w.height)
-		context = Canv[1]
-		if (w instanceof HTMLImageElement) {
-			context.drawImage(w, 0, 0)
-			data = context.getImageData(x, y, 1, 1)
-		} else {
-			data = w.getContext('2d').getImageData(x, y, 1, 1).data
-		}
-		return color(data[0], data[1], data[2], data[3])
-		break
-	case 4:
-		Canv = Canvas(w, h)
-		canv = Canv[0]
-		context = Canv[1]
-		context.putImageData(ctx.getImageData(x, y, w, h), 0, 0)
-		return canv
-		break
-	case 5:
-		Canv = Canvas(src.width, src.height)
-		context = Canv[1]
-		context.drawImage(src, -x, -y)
-		return Canv[0]
-		break
-	default:
-		return
+    	case 0:
+    		get(0, 0, width, height)
+    		break
+    	case 2:
+    		data = ctx.getImageData(x, y, 1, 1).data
+    		return color(data[0], data[1], data[2], data[3])
+    		break
+    	case 3: {
+    	    const canvas = new OffscreenCanvas(w.width, w.height)
+    		const ctx = canvas.getContext('2d')
+    		if (w instanceof HTMLImageElement) {
+    			ctx.drawImage(w, 0, 0)
+    			data = ctx.getImageData(x, y, 1, 1)
+    		} else {
+    			data = w.getContext('2d').getImageData(x, y, 1, 1).data
+    		}
+    		return color(data[0], data[1], data[2], data[3])
+    	}
+    	break
+    	case 4: {
+    	    const imageCanvas = new OffscreenCanvas(w, h)
+    		const context = imageCanvas.getContext('2d')
+    		context.putImageData(ctx.getImageData(x, y, w, h), 0, 0)
+    		return imageCanvas
+    	}
+    	break
+    	case 5: {
+    	    const canvas = new OffscreenCanvas(src.width, src.height)
+    	    const ctx = canvas.getContext('2d')
+    		ctx.drawImage(src, -x, -y)
+    		return canvas
+    	}
+    	break
 	}
 }
 mask = () => ctx.globalCompositeOperation = 'source-atop'
@@ -396,9 +415,9 @@ getImage = (src, width, height) => new Promise((resolve, reject) => {
     img.onload = () => resolve(img)
 	img.onerror = () => reject('invalid or unaccessible image source')
 })
-image = async function (img,x,y,w=img.width,h=img.height){
-    data.image && (x = x - w / 2, y = y - h / 2)
-    typeof img?.then === 'function' ? await img.then(loadedImage => ctx.drawImage(loadedImage, x, y, w ?? loadedImage.width, h ?? loadedImage.height)) : ctx[img instanceof ImageData ? 'putImageData' : 'drawImage'](img, x, y, w, h)
+image = (img,x,y,w=img.width,h=img.height) => {
+    [x, y] = skiJSData.pos('image', x, y, w, h)
+    ctx[img instanceof ImageData ? 'putImageData' : 'drawImage'](img, x, y, w, h)
 }
 loadImage = (src, width, height) => Object.assign(width ? new Image(width, height) : new Image, (/khanacademy/).test(src) ? {src: src} : {src: src, crossOrigin: 'anonymous'})
 loadFont = (...fontz) => {
@@ -416,7 +435,7 @@ mouseOut = ()=>{}
 mouseOver = ()=>{}
 mouseMoved = ()=>{}
 mouseIsPressed = false
-mouseButton = left
+mouseButton = LEFT_BUTTON
 mouseX = 0
 mouseY = 0
 pmouseX = mouseX
@@ -427,10 +446,11 @@ canvas.onmousedown = e=>{
 	mouseButton = e.button
 }
 canvas.onmousemove = e=>{
+    const rect = canvas.getBoundingClientRect()
 	pmouseX = mouseX
 	pmouseY = mouseY
-	mouseX = e.pageX
-	mouseY = e.pageY
+	mouseX = constrain(e.pageX - rect.x, 0, width)
+	mouseY = constrain(e.pageY - rect.y, 0, height)
 	mouseMoved(e)
 }
 canvas.onmouseup = e=>{
@@ -479,15 +499,15 @@ document.onkeypress = e=>{
 
 //animation
 frameCount = 0
-frameRate = rate=>data.rate = rate
-millis = ()=>data.millis
+frameRate = rate=>skiJSData.rate = rate
+millis = ()=>skiJSData.millis
 delta = 1000 / 60
 then = performance.now()
-data.start = performance.now()
+skiJSData.start = performance.now()
 raf = time=>{
 	requestAnimationFrame(raf)
 	delta = time - then
-	var ms = 1000 / data.rate
+	var ms = 1000 / skiJSData.rate
 	if (delta < ms)
 		return
 	var overflow = delta % ms
@@ -495,9 +515,10 @@ raf = time=>{
 	delta -= overflow
 	draw_standin(time)
 	frameCount += 1
-	data.millis = performance.now() - data.start
+	skiJSData.millis = performance.now() - skiJSData.start
 	fps = 1000 / delta
 }
+
 Object.defineProperty(window, "draw", {
     get() {
         return draw_standin
@@ -511,9 +532,8 @@ Object.defineProperty(window, "draw", {
 
 //quick resolution change
 size(window.innerWidth, window.innerHeight)
-
 //for the KA environment
-for (var i = requestAnimationFrame(()=>0); i--; )
+for (let i = requestAnimationFrame(()=>0); i--;)
 	cancelAnimationFrame(i)
 
 //easter egg?
