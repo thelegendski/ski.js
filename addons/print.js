@@ -1,4 +1,6 @@
-var println = (...args) => {
+var println, clearLogs
+
+println = (...args) => {
     closer.style.display === "none" && [...logger.childNodes].forEach(child => child.classList.contains('line') && logger.removeChild(child))
     logger.style.animation = "0.3s forwards open"
     closer.style.display = "flex"
@@ -10,13 +12,13 @@ var println = (...args) => {
         div.setAttribute('width', '100vw')
         logger.appendChild(div)
     })
-},
+}
 clearLogs = () => {
     logger.style.animation = "0.5s forwards close"
     closer.style.display = "none"
 }
 
-const logger = document.createElement('div'),
+var   logger = document.createElement('div'),
       closer = document.createElement('span'),
       style  = document.createElement('style')
       
