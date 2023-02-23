@@ -1,6 +1,5 @@
-var println, clearLogs
-
-println = (...args) => {
+const exports = {}
+exports.println = (...args) => {
     closer.style.display === "none" && [...logger.childNodes].forEach(child => child.classList.contains('line') && logger.removeChild(child))
     logger.style.animation = "0.3s forwards open"
     closer.style.display = "flex"
@@ -13,7 +12,7 @@ println = (...args) => {
         logger.appendChild(div)
     })
 }
-clearLogs = () => {
+exports.clearLogs = () => {
     logger.style.animation = "0.5s forwards close"
     closer.style.display = "none"
 }
@@ -103,3 +102,5 @@ logger.onclick = e => e.target.classList.contains('close') && clearLogs()
 document.head.appendChild(style)
 logger.appendChild(closer)
 document.body.appendChild(logger)
+
+for(let key in exports) window[key] = exports[key]
