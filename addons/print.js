@@ -1,5 +1,4 @@
-const exports = {}
-exports.println = (...args) => {
+var println = (...args) => {
     closer.style.display === "none" && [...logger.childNodes].forEach(child => child.classList.contains('line') && logger.removeChild(child))
     logger.style.animation = "0.3s forwards open"
     closer.style.display = "flex"
@@ -11,15 +10,14 @@ exports.println = (...args) => {
         div.setAttribute('width', '100vw')
         logger.appendChild(div)
     })
-}
-exports.clearLogs = () => {
+},
+clearLogs = () => {
     logger.style.animation = "0.5s forwards close"
     closer.style.display = "none"
-}
-
-var   logger = document.createElement('div'),
-      closer = document.createElement('span'),
-      style  = document.createElement('style')
+},
+logger = document.createElement('div'),
+closer = document.createElement('span'),
+style  = document.createElement('style')
       
 style.innerHTML = `
 @keyframes close {
@@ -102,5 +100,3 @@ logger.onclick = e => e.target.classList.contains('close') && clearLogs()
 document.head.appendChild(style)
 logger.appendChild(closer)
 document.body.appendChild(logger)
-
-for(let key in exports) window[key] = exports[key]
