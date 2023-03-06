@@ -1,4 +1,32 @@
-/*
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>JSDoc: Source: main.js</title>
+
+    <script src="scripts/prettify/prettify.js"> </script>
+    <script src="scripts/prettify/lang-css.js"> </script>
+    <!--[if lt IE 9]>
+      <script src="//html5shiv.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link type="text/css" rel="stylesheet" href="styles/prettify-tomorrow.css">
+    <link type="text/css" rel="stylesheet" href="styles/jsdoc-default.css">
+</head>
+
+<body>
+
+<div id="main">
+
+    <h1 class="page-title">Source: main.js</h1>
+
+    
+
+
+
+    
+    <section>
+        <article>
+            <pre class="prettyprint source linenums"><code>/*
   ski.js
   version 1.9.0
 */
@@ -53,7 +81,7 @@ skiJSData = {
 	    return (this.flags.includes('bold') ? 'bold ' : '') + (this.flags.includes('italic') ? 'italic ' : '') + `${size}px ${font}`
 	},
 	pos (type, x, y, w, h) {
-	    return type !== "ellipse" ? this[type] < 1 ? [x, y] : [x - w / 2, y - h / 2] : this[type] < 1 ? [x + w / 2, y + w / 2] : [x, y]
+	    return type !== "ellipse" ? this[type] &lt; 1 ? [x, y] : [x - w / 2, y - h / 2] : this[type] &lt; 1 ? [x + w / 2, y + w / 2] : [x, y]
 	},
 	matrixToArray (matrix) {
 	    return ['a', 'b', 'c', 'd', 'e', 'f'].map(el => matrix[el])
@@ -153,7 +181,7 @@ angleMode = mode=>skiJSData.angle = mode
 size = (w, h, css)=>{
 	width = canvas.width = w
 	height = canvas.height = h
-	css && (canvas.style.width = `${w}px`, canvas.style.height = `${h}px`)
+	css &amp;&amp; (canvas.style.width = `${w}px`, canvas.style.height = `${h}px`)
 }
 /**
  * Disables the `draw` function from being called every frame
@@ -182,8 +210,8 @@ set = (...args) => {
 }
 
 //math
-max = (n,N)=>n < N ? N : n
-min = (n,N)=>n < N ? n : N
+max = (n,N)=>n &lt; N ? N : n
+min = (n,N)=>n &lt; N ? n : N
 mag = (a,b)=>Math.sqrt((a ** 2) + (b ** 2))
 dist = (x,y,X,Y)=>mag(x - X, y - Y)
 exp = n=>Math.E ** n
@@ -196,10 +224,10 @@ log = n=>Math.log(n)
 sqrt = n=>Math.sqrt(n)
 sq = n=>n ** 2
 pow = (n,a)=>n ** a
-abs = n=>n < 0 ? -n : n
+abs = n=>n &lt; 0 ? -n : n
 floor = n=>n | 0
 ceil = n=>(n | 0) + 1
-round = n=>n - (n | 0) < 0.5 ? (n | 0) : (n | 0) + 1
+round = n=>n - (n | 0) &lt; 0.5 ? (n | 0) : (n | 0) + 1
 sin = ang=>Math.sin(skiJSData.angle === "deg" ? degrees(ang) : ang)
 cos = ang=>Math.cos(skiJSData.angle === "deg" ? degrees(ang) : ang)
 tan = ang=>Math.tan(skiJSData.angle === "deg" ? degrees(ang) : ang)
@@ -215,9 +243,9 @@ bezierTangent = (a,b,c,d,t)=>(3 * t * t * (-a + 3 * b - 3 * c + d) + 6 * t * (a 
 //graphix
 colorMode = mode => skiJSData.color = mode
 color = (...args) => {
-	if(typeof args[0] === 'string' && args.length <= 1 && (/(#|rgb|hsl)/).test(args[0])) return args[0]
-	args[0] instanceof Array && (args = args[0])
-	if(typeof args[1] === 'number' && (/rgb/).test(args[0])){
+	if(typeof args[0] === 'string' &amp;&amp; args.length &lt;= 1 &amp;&amp; (/(#|rgb|hsl)/).test(args[0])) return args[0]
+	args[0] instanceof Array &amp;&amp; (args = args[0])
+	if(typeof args[1] === 'number' &amp;&amp; (/rgb/).test(args[0])){
 	    let cache = args[0].match(/\d{1,3}/g)
 	    args = [cache[0], cache[1], cache[2], args[1]]
 	}
@@ -316,13 +344,13 @@ ellipseMode = (m)=>skiJSData.ellipse = m
 arcMode = m=>skiJSData.arc = m
 imageMode = m=>skiJSData.image = m
 textAlign = (x,y)=>{
-	ctx.textAlign = x <= 0 ? 'start' : 'center'
-	ctx.textBaseline = y <= 0 ? 'hanging' : 'middle'
+	ctx.textAlign = x &lt;= 0 ? 'start' : 'center'
+	ctx.textBaseline = y &lt;= 0 ? 'hanging' : 'middle'
 }
 createFont = font=>font
-textSize = size => skiJSData.height = size && (ctx.font = skiJSData.fontString(skiJSData.font, size))
+textSize = size => skiJSData.height = size &amp;&amp; (ctx.font = skiJSData.fontString(skiJSData.font, size))
 textFont = (font, size=skiJSData.height) => {
-	skiJSData.height !== size && (skiJSData.height = size)
+	skiJSData.height !== size &amp;&amp; (skiJSData.height = size)
 	skiJSData.flags = []
 	if ((/bold/i).test(font)) (skiJSData.flags.push('bold'), font = font.replace('bold', ''))
 	if ((/italic/i).test(font)) (skiJSData.flags.push('italic'), font = font.replace('italic', ''))
@@ -355,10 +383,10 @@ curveVertex = (cx,cy,x,y)=>shapePathz.push({type: 'curve', points: [cx, cy, x, y
 bezierVertex = (cx,cy,cX,cY,x,y)=>shapePathz.push({type: 'bezier', points: [cx, cy, cX, cY, x, y]})
 endShape = (end)=>{
     const paths = shapePathz
-	if (paths.length < 2 || paths[0].type !== 'vertex') return
+	if (paths.length &lt; 2 || paths[0].type !== 'vertex') return
 	ctx.beginPath()
-	paths.forEach((path, index) => ctx[index < 1 && path.type === 'vertex' ? 'moveTo' : path.type === 'vertex' ? 'lineTo' : path.type === 'curve' ? 'quadraticCurveTo' : 'bezierCurveTo'](...path.points))
-	end && ctx.closePath()
+	paths.forEach((path, index) => ctx[index &lt; 1 &amp;&amp; path.type === 'vertex' ? 'moveTo' : path.type === 'vertex' ? 'lineTo' : path.type === 'curve' ? 'quadraticCurveTo' : 'bezierCurveTo'](...path.points))
+	end &amp;&amp; ctx.closePath()
 	ctx.fill()
 	ctx.stroke()
 }
@@ -385,11 +413,11 @@ arc = (x,y,w,h,start,stop,close=false)=>{
 	}
 	ctx.save()
 	ctx.translate(x, y)
-	w !== h && (w > h ? ctx.scale(Math.max(w, h) / Math.min(w, h), 1) : ctx.scale(1, Math.max(w, h) / Math.min(w, h)))
+	w !== h &amp;&amp; (w > h ? ctx.scale(Math.max(w, h) / Math.min(w, h), 1) : ctx.scale(1, Math.max(w, h) / Math.min(w, h)))
 	ctx.beginPath()
-	ctx.fillStyle !== 'rgba(0, 0, 0, 0)' && ctx.moveTo(0, 0)
+	ctx.fillStyle !== 'rgba(0, 0, 0, 0)' &amp;&amp; ctx.moveTo(0, 0)
 	ctx.arc(0, 0, Math.min(w, h) / 2, degrees(start), degrees(stop))
-	close && ctx.closePath()
+	close &amp;&amp; ctx.closePath()
 	ctx.restore()
 	ctx.fill()
 	ctx.stroke()
@@ -578,7 +606,7 @@ raf = time=>{
 	requestAnimationFrame(raf)
 	delta = time - then
 	var ms = 1000 / skiJSData.rate
-	if (delta < ms)
+	if (delta &lt; ms)
 		return
 	var overflow = delta % ms
 	then = time - overflow
@@ -594,7 +622,7 @@ Object.defineProperty(window, "draw", {
         return draw_standin
     },
     set(func) {
-        typeof draw_standin !== "function" && requestAnimationFrame(raf)
+        typeof draw_standin !== "function" &amp;&amp; requestAnimationFrame(raf)
         draw_standin = func
     },
     configurable: true
@@ -607,3 +635,26 @@ for (let i = requestAnimationFrame(()=>0); i--;)
 	cancelAnimationFrame(i)
 
 //easter egg?
+</code></pre>
+        </article>
+    </section>
+
+
+
+
+</div>
+
+<nav>
+    <h2><a href="index.html">Home</a></h2><h3>Global</h3><ul><li><a href="global.html#angleMode">angleMode</a></li><li><a href="global.html#cursor">cursor</a></li><li><a href="global.html#day">day</a></li><li><a href="global.html#debug">debug</a></li><li><a href="global.html#enableContextMenu">enableContextMenu</a></li><li><a href="global.html#enableResize">enableResize</a></li><li><a href="global.html#equal">equal</a></li><li><a href="global.html#hour">hour</a></li><li><a href="global.html#minute">minute</a></li><li><a href="global.html#month">month</a></li><li><a href="global.html#noLoop">noLoop</a></li><li><a href="global.html#seconds">seconds</a></li><li><a href="global.html#size">size</a></li><li><a href="global.html#smooth">smooth</a></li><li><a href="global.html#year">year</a></li></ul>
+</nav>
+
+<br class="clear">
+
+<footer>
+    Documentation generated by <a href="https://github.com/jsdoc/jsdoc">JSDoc 4.0.2</a> on Sun Mar 05 2023 16:24:17 GMT-0800 (Pacific Standard Time)
+</footer>
+
+<script> prettyPrint(); </script>
+<script src="scripts/linenumber.js"> </script>
+</body>
+</html>

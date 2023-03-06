@@ -1,0 +1,25 @@
+{
+  "name": "ski.js",
+  "version": "1.8.9",
+  "description": "tiny, fast, efficient, easy-to-use canvas library for the web",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "min": "terser main.js -mo main.min.js",
+    "docs": "jsdoc main.js -d docs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thelegendski/ski.js.git"
+  },
+  "author": "thelegendski",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thelegendski/ski.js/issues"
+  },
+  "homepage": "https://github.com/thelegendski/ski.js#readme",
+  "devDependencies": {
+    "jsdoc": "^4.0.2",
+    "terser": "^5.16.5"
+  }
+}
