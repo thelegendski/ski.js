@@ -208,7 +208,6 @@ const determineShader = (name, val) => {
                         str += `texture2D(Sampler, texture + pixel * vec2(${(j - mid)}.0,  ${(i - mid)}.0)) * kernel[${index}]${index < n * n - 1 ? ' + ' : ';'}\n`
                     }
                 }
-                println(str)
                 //return our results in object form
                 return blur ? {
                     kernel: arr, 
