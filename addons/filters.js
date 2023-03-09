@@ -108,7 +108,7 @@ const determineShader = (name, val) => {
             return `
             lowp float num = ${constrain(val, 2, 255) | 0}.0;
             vec4 color = texture2D(Sampler, texture);
-            gl_FragColor = vec4(floor(color.r * num) / (num - 1.0), floor(color.g * num) / (num - 1.0), floor(color.b * num) / (num - 1.0), color.a);
+            gl_FragColor = vec4(floor(color.r * num) / (num - 1.0), floor(color.g * num) / (num - 1.0), floor(color.b * num) / (num - 1.0), floor(color.a * num) / (num - 1.0));
             `
         break
         case 'weird posterize':
