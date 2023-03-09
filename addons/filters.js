@@ -1,5 +1,5 @@
 /*
-note: main.js is a dependent for filters.js
+note: main.js is a dependency for filters.js
 */
 
 const createWebGLProgram = (gl, vertexShader, fragmentShader) => {
@@ -324,12 +324,12 @@ const filter = (...args) => {
         const shader = cache
         const output = applyShader(target, shader)
         if(bool) return output
-        else image(output, data.image ? 300 : 0, data.image ? 300 : 0)
+        else image(output, skiJSData.image ? 300 : 0, skiJSData.image ? 300 : 0)
     }
     else {
         const shader = cache.shader
         const output = applyShader(target, shader, cache.kernel, cache.n)
         if(bool) return output
-        else image(output, data.image ? 300 : 0, data.image ? 300 : 0)
+        else image(output, skiJSData.image ? 300 : 0, skiJSData.image ? 300 : 0)
     }
 }
