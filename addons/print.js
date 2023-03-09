@@ -13,14 +13,15 @@ var println = (...args) => {
     skiJSData.print = true
 },
 clearLogs = () => {
-    if(!skiJSData.print) return
+    if(skiJSData.print) return
     logger.style.animation = "0.5s forwards close"
     closer.style.display = "none"
     skiJSData.print = false
 },
 logger = document.createElement('div'),
 closer = document.createElement('span'),
-style  = document.createElement('style')
+style  = document.createElement('style'),
+skiJSData = skiJSData ?? {}
       
 style.innerHTML = `
 @keyframes close {
