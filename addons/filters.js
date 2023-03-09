@@ -1,7 +1,8 @@
 /*
-note: main.js is a dependency for filters.js
+main.js is a dependency for filters.js
 */
 
+//create WebGL program from context an' shaderz
 const createWebGLProgram = (gl, vertexShader, fragmentShader) => {
     //create our shaders
     const vertex_shader = gl.createShader(gl.VERTEX_SHADER)
@@ -66,7 +67,8 @@ const getWeight = kernel => {
 const determineShader = (name, val) => {
     //utility function
     const constrain = (a, b, c) => Math.min(Math.max(a, b), c)
-    switch(name.toLowerCase()){
+    if(typeof val !== "number") return
+    switch(name){
         case 'opaque':    
             return `
             vec4 tex = texture2D(Sampler, texture);
@@ -76,37 +78,45 @@ const determineShader = (name, val) => {
         case 'invert':
             return `
             vec4 tex = texture2D(Sampler, texture);
-            gl_FragColor = vec4(1.0 - tex.r, 1.0 - tex.g, 1.0 - tex.b, 1.0);
+            gl_FragColor = vec4(1.0 - tex.r, 1.0 - tex.g, 1.0 - tex.b, tex.a);
             `
         break
         case 'threshold':
             return `
-            highp float threshold = ${constrain(val, 0, 1) | 0}.0;
+            lowp float threshold = ${constrain(val, 0, 1) | 0}.0;
             vec4 tex = texture2D(Sampler, texture);
             float color = (0.2126 * tex.r + 0.7152 * tex.g + 0.0722 * tex.b) >= threshold ? 255.0 : 0.0;
-            gl_FragColor = vec4(color, color, color, 1.0);
+            gl_FragColor = vec4(color, color, color, tex.a);
             `
         break
         case 'brightness':
             return `
-            highp float brightness = ${constrain(val, 0, 255) | 0}.0 / 255.0;
+            lowp float brightness = ${constrain(val, 0, 255) | 0}.0 / 255.0;
             vec4 tex = texture2D(Sampler, texture);
-            gl_FragColor = vec4(tex.r + brightness, tex.g + brightness, tex.b + brightness, 1.0);
+            gl_FragColor = vec4(tex.r + brightness, tex.g + brightness, tex.b + brightness, tex.a);
             `
         break
         case 'grayscale':
             return `
             vec4 tex = texture2D(Sampler, texture);
             float color = 0.299 * tex.r + 0.587 * tex.g + 0.114 * tex.b;
-            gl_FragColor = vec4(color, color, color, 1.0);
+            gl_FragColor = vec4(color, color, color, tex.a);
             `
         break
         case 'posterize':
+            if((val | 0 ) !== val) return
             return `
-            highp float num = ${constrain(val, 2, 255) | 0}.0;
+            lowp float num = ${constrain(val, 2, 255) | 0}.0;
             vec4 color = texture2D(Sampler, texture);
-            gl_FragColor = vec4(floor(color.r * num) / 256.0 * 255.0 / (num - 1.0), floor(color.g * num) / 256.0 * 255.0 / (num - 1.0), floor(color.b * num) / 256.0 * 255.0 / (num - 1.0), 1.0);
+            gl_FragColor = vec4(floor(color.r * num) / (num - 1.0), floor(color.g * num) / (num - 1.0), floor(color.b * num) / (num - 1.0), color.a);
             `
+        break
+        case 'weird posterize':
+            return `
+            lowp float num = ${constrain(val, 2, 255) | 0}.0;
+            vec4 color = texture2D(Sampler, texture);
+            gl_FragColor = vec4(floor(color.r * num) / (num - 1.0), floor(color.g * num) / (num - 1.0), floor(color.b * num) / (num - 1.0), color);
+            ` 
         break
         default:
             const kernels = {
@@ -184,7 +194,7 @@ const determineShader = (name, val) => {
                 const dist = (x, y, X, Y) => abs(X - x) + abs(Y - y)
                 
                 //  array     midpoint      string
-                let arr = [], mid = n >> 1, str = 'vec2 pixel = vec2(1.0, 1.0) / size;\nvec4 color = '
+                let arr = [], mid = n >> 1, str = 'vec4 tex = texture2D(Sampler, texture); vec2 pixel = vec2(1.0, 1.0) / size;\nvec4 color = '
                 
                 //loop through in order [y]
                 for(let i = 0; i < n; i++){
@@ -198,18 +208,18 @@ const determineShader = (name, val) => {
                         str += `texture2D(Sampler, texture + pixel * vec2(${(j - mid)}.0,  ${(i - mid)}.0)) * kernel[${index}]${index < n * n - 1 ? ' + ' : ';'}\n`
                     }
                 }
-                
+                println(str)
                 //return our results in object form
                 return blur ? {
                     kernel: arr, 
                     shader: `${str}
                             //set out color
-                            gl_FragColor = vec4((color / weight).rgb, 1.0);
+                            gl_FragColor = vec4((color / weight).rgb, tex.a);
                     `,
                     n: n
                 } : `${str}
                     //set out color
-                    gl_FragColor = vec4((color / weight).rgb, 1.0);
+                    gl_FragColor = vec4((color / weight).rgb, tex.a);
                     `
             }
             if(!kernels[name] && name !== 'blur') return
@@ -220,7 +230,7 @@ const applyShader = (img, shader, kernel=0, n=0) => {
     //oh boy, o.o.
     const vertex = `
     //set the precision to low an' to type float
-    precision highp float;
+    precision lowp float;
     //position of the vertices
     attribute vec2 position;
     //resolution of the canvas
@@ -245,7 +255,7 @@ const applyShader = (img, shader, kernel=0, n=0) => {
     `
     
     const fragment = `
-    precision highp float;
+    precision lowp float;
     varying vec2 texture;
     uniform sampler2D Sampler;
     uniform vec2 size;
