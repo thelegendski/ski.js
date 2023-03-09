@@ -10,10 +10,13 @@ var println = (...args) => {
         div.setAttribute('width', '100vw')
         logger.appendChild(div)
     })
+    skiJSData.print = true
 },
 clearLogs = () => {
+    if(!skiJSData.print) return
     logger.style.animation = "0.5s forwards close"
     closer.style.display = "none"
+    skiJSData.print = false
 },
 logger = document.createElement('div'),
 closer = document.createElement('span'),
@@ -100,3 +103,5 @@ logger.onclick = e => e.target.classList.contains('close') && clearLogs()
 document.head.appendChild(style)
 logger.appendChild(closer)
 document.body.appendChild(logger)
+
+skiJSData.print = false
