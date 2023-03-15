@@ -4,7 +4,7 @@
 */
 
 //all variables at global scope
-var canvas, ctx, width, height, CORNER, CENTER, CLOSE, SPACE, LEFT, RIGHT, UP, DOWN, SQUARE, ROUND, PROJECT, MITER, BEVEL, DEGREES, RADIANS, PI, TAU, RGB, HSL, HEX, LEFT_BUTTON, RIGHT_BUTTON, frameCount, frameRate, millis, debug, equal, day, month, year, hour, minute, seconds, enableContextMenu, enableResize, smooth, cursor, angleMode, max, min, mag, dist, exp, norm, map, lerp, random, constrain, log, sqrt, sq, pow, abs, floor, ceil, round, sin, cos, tan, acos, asin, atan, atan2, radians, degrees, fill, stroke, background, color, colorMode, noStroke, noFill, comp, rect, clear, text, rectMode, ellipseMode, createFont, textAlign, textFont, textSize, strokeCap, strokeJoin, strokeWeight, pushMatrix, popMatrix, translate, rotate, scale, beginShape, vertex, curveVertex, bezierVertex, endShape, curve, bezier, arc, ellipse, quad, triangle, point, line, textWidth, textAscent, textDescent, get, mask, image, mousePressed, mouseReleased, mouseScrolled, mouseClicked, mouseOver, mouseOut, mouseMoved, mouseIsPressed, mouseButton, mouseX, mouseY, pmouseX, pmouseY, keyPressed, keyReleased, keyTyped, key, keyIsPressed, keyCode, resetMatrix, clear, bezierPoint, bezierTangent, fps, lerpColor, size, imageMode, arcMode, noLoop, raf, delta, loadImage, then, draw_standin, startMask, resetMask, getImage, shapePathz, set, loadFont, noSmooth, skiJSData, textLeading, pushStyle, popStyle
+var canvas, ctx, width, height, CORNER, CENTER, CLOSE, SPACE, LEFT, RIGHT, UP, DOWN, SQUARE, ROUND, PROJECT, MITER, BEVEL, DEGREES, RADIANS, PI, TAU, RGB, HSL, HEX, LEFT_BUTTON, RIGHT_BUTTON, frameCount, frameRate, millis, debug, equal, day, month, year, hour, minute, seconds, enableContextMenu, enableResize, smooth, cursor, angleMode, max, min, mag, dist, exp, norm, map, lerp, random, constrain, log, sqrt, sq, pow, abs, floor, ceil, round, sin, cos, tan, acos, asin, atan, atan2, radians, degrees, fill, stroke, background, color, colorMode, noStroke, noFill, comp, rect, clear, text, rectMode, ellipseMode, createFont, textAlign, textFont, textSize, strokeCap, strokeJoin, strokeWeight, pushMatrix, popMatrix, translate, rotate, scale, beginShape, vertex, curveVertex, bezierVertex, endShape, curve, bezier, arc, ellipse, quad, triangle, point, line, textWidth, textAscent, textDescent, get, mask, image, mousePressed, mouseReleased, mouseScrolled, mouseClicked, mouseOver, mouseOut, mouseMoved, mouseIsPressed, mouseButton, mouseX, mouseY, pmouseX, pmouseY, keyPressed, keyReleased, keyTyped, key, keyIsPressed, keyCode, resetMatrix, clear, bezierPoint, bezierTangent, fps, lerpColor, size, imageMode, arcMode, noLoop, raf, delta, loadImage, then, draw_standin, startMask, resetMask, getImage, shapePathz, set, loadFont, noSmooth, skiJSData, textLeading, pushStyle, popStyle, breakText
 
 //setup the canvas
 canvas = document.getElementsByTagName('canvas')[0] ?? new OffscreenCanvas(window.innerWidth, window.innerHeight)
@@ -37,10 +37,10 @@ RIGHT_BUTTON = 2
 
 //data used by ski.js
 skiJSData = {
-	rect: CENTER,
+	rect: CORNER,
 	ellipse: CENTER,
 	arc: CENTER,
-	image: CENTER,
+	image: CORNER,
 	angle: DEGREES,
 	color: RGB,
 	leading: 0,
@@ -228,14 +228,31 @@ rect = (x,y,width,height,tl,tr,br,bl)=>{
 	}
 }
 clear = ()=>ctx.clearRect(0, 0, canvas.width, canvas.height)
-text = (msg,x,y)=>{
+breakText = (txt, w) => {
+    if(textWidth(txt) > w){
+        let char = 0, str = '', result = ''
+        for(let i = 0; i < txt.length; i++){
+            str += txt[i]
+            if(textWidth(str) > w){
+                char = i + 1
+                str = txt.slice(0, char)
+                result = txt.slice(char, txt.length)
+                break
+            }
+        }
+        if (result) return str + '\n' + breakText(result, w)
+        else return str
+    }
+    else return txt
+}
+text = (msg,x,y,w,h)=>{
 	msg = msg.toString()
+	if(w) msg = breakText(msg, w)
 	if (msg.match('\n')) {
 		msg.split('\n').map((p,i)=>{
 			ctx.fillText(p, x, y + ((i - ((msg.split('\n')).length - 1) / 2) * (skiJSData.height + skiJSData.leading)))
 			ctx.strokeText(p, x, y + ((i - ((msg.split('\n')).length - 1) / 2) * (skiJSData.height + skiJSData.leading)))
-		}
-		)
+		})
 	} else {
 		ctx.fillText(msg, x, y)
 		ctx.strokeText(msg, x, y)
@@ -470,7 +487,8 @@ canvas.onmouseout = e=>{
 	mouseOut(e)
 }
 canvas.onwheel = e=>{
-	e.preventDefault()
+	// just for now. may reimplement this in the future - PROMISE
+	// e.preventDefault()
 	mouseScrolled(e)
 }
 
@@ -478,23 +496,29 @@ keyPressed = () => {}
 keyReleased = () => {}
 keyTyped = () => {}
 document.onkeydown = e=>{
-	e.preventDefault()
-	key = e.key
-	keyCode = e.keyCode
-	keyIsPressed = true
-	keyPressed(e)
+    if(e.target instanceof HTMLBodyElement){
+    	e.preventDefault()
+    	key = e.key
+    	keyCode = e.keyCode
+    	keyIsPressed = true
+    	keyPressed(e)
+    }
 }
 document.onkeyup = e=>{
-	e.preventDefault()
-	key = e.key
-	keyCode = e.keyCode
-	keyReleased(e)
+    if(e.target instanceof HTMLBodyElement){
+    	e.preventDefault()
+    	key = e.key
+    	keyCode = e.keyCode
+    	keyReleased(e)
+    }
 }
 document.onkeypress = e=>{
-	e.preventDefault()
-	key = e.key
-	keyCode = e.keyCode
-	keyTyped(e)
+	if(e.target instanceof HTMLBodyElement){
+    	e.preventDefault()
+    	key = e.key
+    	keyCode = e.keyCode
+    	keyTyped(e)
+	}
 }
 
 //animation
