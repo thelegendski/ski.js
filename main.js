@@ -5,15 +5,15 @@
 
 */
 
-// All variables at global scope
+// all variables at global scope
 var canvas, ctx, width, height, CORNER, CENTER, CLOSE, SPACE, LEFT, RIGHT, UP, DOWN, SQUARE, ROUND, PROJECT, MITER, BEVEL, DEGREES, RADIANS, PI, TAU, RGB, HSL, HEX, LEFT_BUTTON, RIGHT_BUTTON, frameCount, frameRate, millis, debug, equal, day, month, year, hour, minute, seconds, enableContextMenu, enableResize, smooth, cursor, angleMode, max, min, mag, dist, exp, norm, map, lerp, random, constrain, log, sqrt, sq, pow, abs, floor, ceil, round, sin, cos, tan, acos, asin, atan, atan2, radians, degrees, fill, stroke, background, color, colorMode, noStroke, noFill, comp, rect, clear, text, rectMode, ellipseMode, createFont, textAlign, textFont, textSize, strokeCap, strokeJoin, strokeWeight, pushMatrix, popMatrix, translate, rotate, scale, beginShape, vertex, curveVertex, bezierVertex, endShape, curve, bezier, arc, ellipse, quad, triangle, point, line, textWidth, textAscent, textDescent, get, mask, image, mousePressed, mouseReleased, mouseScrolled, mouseClicked, mouseOver, mouseOut, mouseMoved, mouseIsPressed, mouseButton, mouseX, mouseY, pmouseX, pmouseY, keyPressed, keyReleased, keyTyped, key, keyIsPressed, keyCode, resetMatrix, clear, bezierPoint, bezierTangent, fps, lerpColor, size, imageMode, arcMode, noLoop, raf, delta, loadImage, then, draw_standin, startMask, resetMask, getImage, shapePathz, set, loadFont, noSmooth, skiJSData, textLeading, pushStyle, popStyle, breakText
 
-// Setup the canvas
+// setup the canvas
 canvas = document.getElementsByTagName('canvas')[0] ?? new OffscreenCanvas(window.innerWidth, window.innerHeight)
 ctx = canvas.getContext('2d')
 
 
-// Create constants
+// create constants
 CORNER = 0
 CENTER = 1
 CLOSE = true
@@ -37,7 +37,7 @@ HEX = 'hex'
 LEFT_BUTTON = 0
 RIGHT_BUTTON = 2
 
-//data used by ski.js
+// data used by ski.js
 skiJSData = {
     rect: CORNER,
     ellipse: CENTER,
@@ -65,10 +65,10 @@ skiJSData = {
 
 // FPS
 fps = 60
-// Vector array for shapes
+// vector array for shapes
 shapePathz = []
 
-// Miscellaneous
+// miscellaneous
 debug = (...args) => console.debug(...args)
 equal = (...args) => console.assert(...args)
 day = () => (new Date).getDate()
@@ -113,7 +113,7 @@ set = (...args) => {
     }
 }
 
-//math
+// math
 max = (n, N) => n < N ? N : n
 min = (n, N) => n < N ? n : N
 mag = (a, b) => Math.sqrt((a ** 2) + (b ** 2))
@@ -144,7 +144,7 @@ atan2 = (y, x) => skiJSData.angle === "deg" ? radians(Math.atan2(y, x)) : Math.a
 bezierPoint = (a, b, c, d, t) => (1 - t) * (1 - t) * (1 - t) * a + 3 * (1 - t) * (1 - t) * t * b + 3 * (1 - t) * t * t * c + t * t * t * d
 bezierTangent = (a, b, c, d, t) => (3 * t * t * (-a + 3 * b - 3 * c + d) + 6 * t * (a - 2 * b + c) + 3 * (-a + b))
 
-// Graphics
+// graphix
 colorMode = mode => skiJSData.color = mode
 color = (...args) => {
     if (typeof args[0] === 'string' && args.length <= 1 && (/(#|rgb|hsl)/).test(args[0])) return args[0]
@@ -459,7 +459,7 @@ loadFont = (...fontz) => {
     return link
 }
 
-// Event handlers
+// event handlers
 mousePressed = () => {}
 mouseReleased = () => {}
 mouseScrolled = () => {}
@@ -531,7 +531,7 @@ document.onkeypress = e => {
     }
 }
 
-// Animation
+// animation
 frameCount = 0
 frameRate = rate => skiJSData.rate = rate
 millis = () => skiJSData.millis
@@ -563,10 +563,10 @@ Object.defineProperty(window, "draw", {
     configurable: true
 })
 
-// Quick resolution change
+// quick resolution change
 size(window.innerWidth, window.innerHeight)
 
-// For the KA environment
+// for the KA environment
 for (let i = requestAnimationFrame(() => 0); i--;) cancelAnimationFrame(i)
 
 // Easter egg?
