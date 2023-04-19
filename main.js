@@ -132,15 +132,15 @@ abs = n => n < 0 ? -n : n
 floor = n => n | 0
 ceil = n => (n | 0) + 1
 round = n => n - (n | 0) < 0.5 ? (n | 0) : (n | 0) + 1
-sin = ang => Math.sin(skiJSData.angle === "deg" ? degrees(ang) : ang)
-cos = ang => Math.cos(skiJSData.angle === "deg" ? degrees(ang) : ang)
-tan = ang => Math.tan(skiJSData.angle === "deg" ? degrees(ang) : ang)
-acos = ang => Math.acos(skiJSData.angle === "deg" ? degrees(ang) : ang)
-asin = ang => Math.asin(skiJSData.angle === "deg" ? degrees(ang) : ang)
-atan = ang => Math.atan(skiJSData.angle === "deg" ? degrees(ang) : ang)
+sin = ang => Math.sin(skiJSData.angle == "deg" ? degrees(ang) : ang)
+cos = ang => Math.cos(skiJSData.angle == "deg" ? degrees(ang) : ang)
+tan = ang => Math.tan(skiJSData.angle == "deg" ? degrees(ang) : ang)
+acos = ang => Math.acos(skiJSData.angle == "deg" ? degrees(ang) : ang)
+asin = ang => Math.asin(skiJSData.angle == "deg" ? degrees(ang) : ang)
+atan = ang => Math.atan(skiJSData.angle == "deg" ? degrees(ang) : ang)
 radians = ang => ang * (180 / PI)
 degrees = ang => ang * (PI / 180)
-atan2 = (y, x) => skiJSData.angle === "deg" ? radians(Math.atan2(y, x)) : Math.atan2(x, y)
+atan2 = (y, x) => skiJSData.angle == "deg" ? radians(Math.atan2(y, x)) : Math.atan2(x, y)
 bezierPoint = (a, b, c, d, t) => (1 - t) * (1 - t) * (1 - t) * a + 3 * (1 - t) * (1 - t) * t * b + 3 * (1 - t) * t * t * c + t * t * t * d
 bezierTangent = (a, b, c, d, t) => (3 * t * t * (-a + 3 * b - 3 * c + d) + 6 * t * (a - 2 * b + c) + 3 * (-a + b))
 
@@ -160,13 +160,13 @@ color = (...args) => {
             }) : args
             switch (args.length) {
                 case 1:
-                    return `rgba(${r}, ${r}, ${r}, 255)`
+                    return `rgba(${r}, ${r}, ${r}, 1)`
                     break
                 case 2:
                     return `rgba(${r}, ${r}, ${r}, ${g / 255})`
                     break
                 case 3:
-                    return `rgba(${r}, ${g}, ${b}, 255)`
+                    return `rgba(${r}, ${g}, ${b}, 1)`
                     break
                 case 4:
                     return `rgba(${r}, ${g}, ${b}, ${a / 255})`
@@ -192,8 +192,7 @@ background = (...args) => {
 fill = (...args) => ctx.fillStyle = color(...args)
 stroke = (...args) => ctx.strokeStyle = color(...args)
 lerpColor = (c, C, a) => {
-    if (typeof C !== 'string' || typeof c !== 'string' || skiJSData.color !== RGB)
-        return
+    if (typeof C !== 'string' || typeof c !== 'string' || skiJSData.color !== RGB) return
     const [r, g, b, _a] = c.match(/\d{1,3}/g)
     const [R, G, B, A] = C.match(/\d{1,3}/g)
     return `rgba(${lerp(+r, +R, a)}, ${lerp(+g, +G, a)}, ${lerp(+b, +B, a)}, ${lerp(+_a, +A, a)})`
@@ -210,7 +209,7 @@ rect = (x, y, width, height, tl, tr, br, bl) => {
     [x, y] = skiJSData.pos('rect', x, y, width, height)
     if (tl) {
         const w = width / 2,
-            h = height / 2
+              h = height / 2
         tl = tl > w || tl > h ? Math.min(w, h) : tl
         tr = !bl ? tl : tr
         tr = tr > w || tr > h ? Math.min(w, h) : tr
@@ -257,7 +256,7 @@ breakText = (txt, w) => {
         else return str
     } else return txt
 }
-text = (msg, x, y, w, h) => {
+text = (msg, x, y, w, h) => { // h doesn't do anything
     msg = msg.toString()
     if (w) msg = breakText(msg, w)
     if (msg.match('\n')) {
@@ -270,8 +269,8 @@ text = (msg, x, y, w, h) => {
         ctx.strokeText(msg, x, y)
     }
 }
-rectMode = (m) => skiJSData.rect = m
-ellipseMode = (m) => skiJSData.ellipse = m
+rectMode = m => skiJSData.rect = m
+ellipseMode = m => skiJSData.ellipse = m
 arcMode = m => skiJSData.arc = m
 imageMode = m => skiJSData.image = m
 textAlign = (x, y) => {
@@ -384,7 +383,7 @@ triangle = (x, y, X, Y, _x, _y) => {
     endShape(CLOSE)
 }
 point = (x, y) => {
-    if (ctx.strokeStyle !== 'rgba(0, 0, 0, 0)') {
+    if (ctx.strokeStyle != 'rgba(0, 0, 0, 0)') {
         const cache = [ctx.strokeStyle, ctx.fillStyle]
         noStroke()
         ctx.fillStyle = cache[0]
@@ -432,10 +431,10 @@ get = (...args) => {
             context.putImageData(ctx.getImageData(x, y, w, h), 0, 0)
             return imageCanvas
         case 5: 
-            const canvas = new OffscreenCanvas(src.width, src.height)
-            const ctx = canvas.getContext('2d')
-            ctx.drawImage(src, -x, -y)
-            return canvas
+            const Canvas = new OffscreenCanvas(src.width, src.height)
+            const Ctx = canvas.getContext('2d')
+            Ctx.drawImage(src, -x, -y)
+            return Canvas
     }
 }
 mask = () => ctx.globalCompositeOperation = 'source-atop'
@@ -547,7 +546,7 @@ raf = time => {
     then = time - overflow
     delta -= overflow
     draw_standin(time)
-    frameCount += 1
+    frameCount++
     skiJSData.millis = performance.now() - skiJSData.start
     fps = 1000 / delta
 }
@@ -557,7 +556,7 @@ Object.defineProperty(window, "draw", {
         return draw_standin
     },
     set(func) {
-        typeof draw_standin !== "function" && requestAnimationFrame(raf)
+        typeof draw_standin != "function" && requestAnimationFrame(raf)
         draw_standin = func
     },
     configurable: true
