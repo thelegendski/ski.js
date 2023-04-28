@@ -780,31 +780,26 @@ function adoptCanvas() {
     canvas.onmouseout = e => mouseOut(e)
     canvas.onwheel = e => {
         mouseScrolled(e)
+        e.preventDefault()
     }
     canvas.onkeydown = e => {
-        if (e.target instanceof HTMLBodyElement) {
-            if([UP, DOWN, LEFT, RIGHT, SPACE].includes(e.keyCode)) e.preventDefault()
-            key = e.key
-            keyCode = e.keyCode
-            keyIsPressed = true
-            keyPressed(e)
-        }
+        e.preventDefault()
+        key = e.key
+        keyCode = e.keyCode
+        keyIsPressed = true
+        keyPressed(e)        
     }
-    canvas.onkeyup = e => {
-        if (e.target instanceof HTMLBodyElement) {
-            if([UP, DOWN, LEFT, RIGHT, SPACE].includes(e.keyCode)) e.preventDefault()
-            key = e.key
-            keyCode = e.keyCode
-            keyReleased(e)
-        }
+    canvas.onkeyup = e => {        
+        e.preventDefault()
+        key = e.key
+        keyCode = e.keyCode
+        keyReleased(e)        
     }
-    canvas.onkeypress = e => {
-        if (e.target instanceof HTMLBodyElement) {
-            if([UP, DOWN, LEFT, RIGHT, SPACE].includes(e.keyCode)) e.preventDefault()
-            key = e.key
-            keyCode = e.keyCode
-            keyTyped(e)
-        }
+    canvas.onkeypress = e => {        
+        e.preventDefault()
+        key = e.key
+        keyCode = e.keyCode
+        keyTyped(e)        
     }
 }
 
