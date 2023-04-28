@@ -166,6 +166,26 @@ class Vector {
         )
     }
     /**
+     * xxx HS16
+     * Projects the current vector onto another
+     * 
+     * @param {(number|Vector|Array|{x: number, y: number})} [v]
+     * @param {number} [y]
+     * @param {number} [z]
+     * @returns {Vector} The projected vector
+     */
+    project (v, y, z) {
+        let vec = Vector.from(v, y, z);
+        let ax = this.x, ay = this.y, az = this.z,
+            bx = vec.x , by = vec.z , bz = vec.z;
+        
+        let t = (ax * bx + ay * by + az * bz) / (bx * bx + by * by + bz * bz);
+
+        return new Vector(
+            bx * t, by * t, bz * t
+        );
+    }
+    /**
      * lerps a vector toward another
      * @param {(number|Vector|Array|{x: number, y: number})} [v]
      * @param {number} [y]

@@ -12,7 +12,7 @@
 
 <strong>[WebGLFundamentals](https://webglfundamentals.org/)</strong> - for the basic WebGL setup for the image filterz
 
-<strong>[HSstudent16](https://github.com/HSstudent16)</strong> - for the circle-line physix/collision algorithm which has been modified & for fixin' a bug in <code>print.js</code>
+<strong>[HSstudent16](https://github.com/HSstudent16)</strong> - for the circle-line physix/collision algorithm which has been modified & for fixin' a bug in <code>print.js</code>, and improvin' the event listeners
 
 <strong>[TheDark](https://github.com/99TheDark)</strong> - for the mouseX & mouseY calculations, the suggestion for pushMatrix/popMatrix that did not behave like pushStyle/popStyle, an' a quick fix for print.js from v1.8.14 to v1.8.15
 
