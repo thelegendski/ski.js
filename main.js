@@ -39,8 +39,8 @@ LEFT_BUTTON = 0
 RIGHT_BUTTON = 2
 
 // setup the canvas
-canvas = document.getElementsByTagName("canvas")[0] ?? new OffscreenCanvas(window.innerWidth, window.innerHeight)
-ctx = canvas.getContext("2d")
+canvas = document.getElementsByTagName("canvas")[0]
+ctx = null
 
 //all canvas-related functions
 /**
@@ -61,6 +61,9 @@ function size (w, h, css) {
 }
 /**
  * sets the current canvas to a different canvas, whether off or on screen
+ * 
+ * xxx HS16 - Now attaches the proper event listeners to the canvas.
+ * 
  * @param {...(HTMLCanvasElement|OffscreenCanvas|number} [args] - argument for the set function
  * @example
  * set() 
@@ -73,21 +76,27 @@ function size (w, h, css) {
 function set (...args) {
     switch (args.length) {
         case 0:
+            rejectCanvas()
             canvas = new OffscreenCanvas(width, height)
             ctx = canvas.getContext("2d")
+            adoptCanvas();
             return [canvas, ctx]
             break
         case 1:
+            rejectCanvas()
             canvas = args[0]
             ctx = canvas.getContext("2d")
             width = canvas.width
             height = canvas.height
+            adoptCanvas();
             break
         case 2:
+            rejectCanvas()
             canvas = new OffscreenCanvas(args[0], args[1])
             ctx = canvas.getContext("2d")
             width = args[0]
             height = args[1]
+            adoptCanvas()
             return [canvas, ctx]
     }
 }
@@ -729,66 +738,92 @@ mouseClicked = () => {}
 mouseOut = () => {}
 mouseOver = () => {}
 mouseMoved = () => {}
+keyPressed = () => {}
+keyReleased = () => {}
+keyTyped = () => {}
 mouseIsPressed = false
 mouseButton = LEFT_BUTTON
 mouseX = 0
 mouseY = 0
 pmouseX = mouseX
 pmouseY = mouseY
-canvas.onmousedown = e => {
-    mousePressed(e)
-    mouseIsPressed = true
-    mouseButton = e.button
-}
-canvas.onmousemove = e => {
-    const rect = canvas.getBoundingClientRect()
-    pmouseX = mouseX
-    pmouseY = mouseY
-    mouseX = constrain(e.pageX - rect.x, 0, width)
-    mouseY = constrain(e.pageY - rect.y, 0, height)
-    mouseMoved(e)
-}
-canvas.onmouseup = e => {
-    mouseReleased(e)
-    mouseClicked(e)
-    mouseButton = e.button
-    mouseIsPressed = false
-    e.preventDefault()
-}
-canvas.oncontextmenu = e => e.preventDefault()
-canvas.onmouseover = e => mouseOver(e)
-canvas.onmouseout = e => mouseOut(e)
-canvas.onwheel = e => {
-    mouseScrolled(e)
+
+/**
+ * Attaches event handlers to the current canvas
+ */
+function adoptCanvas() {
+    // xxx HS16 - Bind handlers ONLY to the canvas, so a ski.js
+    // program can be hosted on a website that needs scrolling.
+    canvas.tabIndex = -1
+    canvas.onmousedown = e => {
+        mousePressed(e)
+        mouseIsPressed = true
+        mouseButton = e.button
+    }
+    canvas.onmousemove = e => {
+        const rect = canvas.getBoundingClientRect()
+        pmouseX = mouseX
+        pmouseY = mouseY
+        mouseX = constrain(e.pageX - rect.x, 0, width)
+        mouseY = constrain(e.pageY - rect.y, 0, height)
+        mouseMoved(e)
+    }
+    canvas.onmouseup = e => {
+        mouseReleased(e)
+        mouseClicked(e)
+        mouseButton = e.button
+        mouseIsPressed = false
+        e.preventDefault()
+    }
+    canvas.oncontextmenu = e => e.preventDefault()
+    canvas.onmouseover = e => mouseOver(e)
+    canvas.onmouseout = e => mouseOut(e)
+    canvas.onwheel = e => {
+        mouseScrolled(e)
+    }
+    canvas.onkeydown = e => {
+        if (e.target instanceof HTMLBodyElement) {
+            if([UP, DOWN, LEFT, RIGHT, SPACE].includes(e.keyCode)) e.preventDefault()
+            key = e.key
+            keyCode = e.keyCode
+            keyIsPressed = true
+            keyPressed(e)
+        }
+    }
+    canvas.onkeyup = e => {
+        if (e.target instanceof HTMLBodyElement) {
+            if([UP, DOWN, LEFT, RIGHT, SPACE].includes(e.keyCode)) e.preventDefault()
+            key = e.key
+            keyCode = e.keyCode
+            keyReleased(e)
+        }
+    }
+    canvas.onkeypress = e => {
+        if (e.target instanceof HTMLBodyElement) {
+            if([UP, DOWN, LEFT, RIGHT, SPACE].includes(e.keyCode)) e.preventDefault()
+            key = e.key
+            keyCode = e.keyCode
+            keyTyped(e)
+        }
+    }
 }
 
-keyPressed = () => {}
-keyReleased = () => {}
-keyTyped = () => {}
-document.onkeydown = e => {
-    if (e.target instanceof HTMLBodyElement) {
-        if([UP, DOWN, LEFT, RIGHT, SPACE].includes(e.keyCode)) e.preventDefault()
-        key = e.key
-        keyCode = e.keyCode
-        keyIsPressed = true
-        keyPressed(e)
-    }
-}
-document.onkeyup = e => {
-    if (e.target instanceof HTMLBodyElement) {
-        if([UP, DOWN, LEFT, RIGHT, SPACE].includes(e.keyCode)) e.preventDefault()
-        key = e.key
-        keyCode = e.keyCode
-        keyReleased(e)
-    }
-}
-document.onkeypress = e => {
-    if (e.target instanceof HTMLBodyElement) {
-        if([UP, DOWN, LEFT, RIGHT, SPACE].includes(e.keyCode)) e.preventDefault()
-        key = e.key
-        keyCode = e.keyCode
-        keyTyped(e)
-    }
+/**
+ * Removes all event listeners from a canvas, in anticipation
+ * of a new host.
+ */
+function rejectCanvas() {
+    if (!canvas) return;
+    canvas.onmousedown = null
+    canvas.onmousemove = null
+    canvas.onmouseup   = null
+    canvas.oncontextmenu = null
+    canvas.onmouseover = null
+    canvas.onmouseout  = null
+    canvas.onwheel     = null
+    canvas.onkeydown   = null
+    canvas.onkeyup     = null
+    canvas.onkeypress  = null
 }
 
 // data used by ski.js
@@ -1287,9 +1322,9 @@ function colorMode (mode) {
  * //returns "rgba(25, 25, 25, 1)"
 **/
 function color (...args) {
-    if (typeof args[0] === "string" && args.length <= 1 && (/(#|rgb|hsl)/).test(args[0])) return args[0]
+    if (typeof args[0] === "string" && args.length <= 1 && (/(#|rgb|hsl|rgba)/).test(args[0])) return args[0]
     args[0] instanceof Array && (args = args[0])
-    if (typeof args[1] === "number" && (/rgb/).test(args[0])) {
+    if (typeof args[1] === "number" && (/rgb|rgba/).test(args[0])) {
         let cache = args[0].match(/[0-9\.]+(?=(,|\)))/g)
         args = [cache[0], cache[1], cache[2], args[1]]
     }
@@ -1342,13 +1377,7 @@ function lerpColor (color1, color2, amt) {
 **/
 function getImage (src, width, height) {
     return new Promise((resolve, reject) => {
-        let img
-        //dimensions
-        if(width) img = new Image(width, height)
-        else img = new Image
-        //source
-        img.src = src
-        if(!(/khanacademy/).test(src)) img.crossOrigin = "anonymous"
+        let img = loadImage(src, width, height)
         //resolve or reject
         img.onload = () => resolve(img)
         img.onerror = () => reject("invalid or unaccessible image source")
@@ -1381,10 +1410,8 @@ function loadImage (src, width, height) {
 **/
 function getFont (...fonts) {
     return new Promise ((res, rej) => {
-        const link = document.createElement("link")
-        link.rel = "stylesheet"
-        link.href = `https://fonts.googleapis.com/css?family=${fonts.join("|").replace(/ /g, "+")}`
-        document.body.appendChild(link) 
+        // xxx HS16 - Efficiency :P
+        const link = loadFont(...fonts) 
         link.onload = () => res(link)
         link.onerror = () => reject("invalid or unaccessible fonts. not rlly, it's just an error lol. idk what went wrong, but you're router or DNS is blockin' fonts.googleapis.com")
     })
@@ -1459,8 +1486,8 @@ Object.defineProperty(window, "draw", {
     configurable: true
 })
 
-// quick resolution change
-size(window.innerWidth, window.innerHeight)
+// xxx HS16 - Bind the listeners & set up rendering context
+if (canvas) set(canvas);
 
 // for the KA environment
 for (let i = requestAnimationFrame(() => 0); i--;) cancelAnimationFrame(i)

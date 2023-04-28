@@ -500,9 +500,9 @@ function colorMode (mode) {
  * //returns "rgba(25, 25, 25, 1)"
 **/
 function color (...args) {
-    if (typeof args[0] === "string" && args.length <= 1 && (/(#|rgb|hsl)/).test(args[0])) return args[0]
+    if (typeof args[0] === "string" && args.length <= 1 && (/(#|rgb|hsl|rgba)/).test(args[0])) return args[0]
     args[0] instanceof Array && (args = args[0])
-    if (typeof args[1] === "number" && (/rgb/).test(args[0])) {
+    if (typeof args[1] === "number" && (/rgb|rgba/).test(args[0])) {
         let cache = args[0].match(/[0-9\.]+(?=(,|\)))/g)
         args = [cache[0], cache[1], cache[2], args[1]]
     }
@@ -555,13 +555,7 @@ function lerpColor (color1, color2, amt) {
 **/
 function getImage (src, width, height) {
     return new Promise((resolve, reject) => {
-        let img
-        //dimensions
-        if(width) img = new Image(width, height)
-        else img = new Image
-        //source
-        img.src = src
-        if(!(/khanacademy/).test(src)) img.crossOrigin = "anonymous"
+        let img = loadImage(src, width, height)
         //resolve or reject
         img.onload = () => resolve(img)
         img.onerror = () => reject("invalid or unaccessible image source")
@@ -594,10 +588,7 @@ function loadImage (src, width, height) {
 **/
 function getFont (...fonts) {
     return new Promise ((res, rej) => {
-        const link = document.createElement("link")
-        link.rel = "stylesheet"
-        link.href = `https://fonts.googleapis.com/css?family=${fonts.join("|").replace(/ /g, "+")}`
-        document.body.appendChild(link) 
+        const link = loadFont(...fonts)
         link.onload = () => res(link)
         link.onerror = () => reject("invalid or unaccessible fonts. not rlly, it's just an error lol. idk what went wrong, but you're router or DNS is blockin' fonts.googleapis.com")
     })
