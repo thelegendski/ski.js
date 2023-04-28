@@ -1,6 +1,5 @@
-Object.prototype.toString = function() {
-    return JSON.stringify(this)
-}
+//archived - no longer maintained
+//points.js has a dependency of main.js
 
 class Points {
     constructor(arr){
@@ -61,7 +60,7 @@ class Points {
         this.points.forEach(p => {
             p.x = p.x.toFixed(4)
             p.y = p.y.toFixed(4)
-            str += p.toString()
+            str += JSON.stringify(p)
         })
         println(str)
     }
