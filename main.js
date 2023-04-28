@@ -2,7 +2,6 @@
     ski.js
     version 1.9.0
 */
-
 var CORNER, CENTER, CLOSE, SPACE, LEFT, RIGHT, UP, DOWN, SQUARE, ROUND, PROJECT, MITER, BEVEL, DEGREES, RADIANS, PI, TAU, RGBA, HSL, HEX, LEFT_BUTTON, RIGHT_BUTTON, ESCAPE, TAB, SHIFT, CONTROL, ALT, ENTER, BACKSPACE, fps, skiJSData, canvas, ctx, mousePressed, mouseReleased, mouseScrolled, mouseClicked, mouseOver, mouseOut, mouseMoved, mouseIsPressed, mouseButton, mouseX, mouseY, pmouseX, pmouseY, keyPressed, keyReleased, keyTyped, key, keyIsPressed, keyCode, width, height
 
 // constants
@@ -53,8 +52,8 @@ ctx = null
  * //resizes the resolution of the canvas to 600px by 600px
  * size(600, 600, true)
  * //resizes the resolution an' dimension of the canvas to 600px by 600px
-**/
-function size (w, h, css) {
+ **/
+function size(w, h, css) {
     if (!canvas || !ctx) {
         canvas = document.querySelectorAll("canvas,canvas.skijs,canvas[data-skijs]")[0]
         set(canvas)
@@ -76,8 +75,8 @@ function size (w, h, css) {
  * //set the canvas to the first canvas element in the DOM
  * set(400, 400) 
  * //sets the canvas to a new OffscreenCanvas with dimensions 400px by 400px
-**/
-function set (...args) {
+ **/
+function set(...args) {
     switch (args.length) {
         case 0:
             rejectCanvas()
@@ -108,8 +107,8 @@ function set (...args) {
  * sets the background for the canvas
  * @param {...(string|number|Array)} args
  * @see {@link color} for the definition of the arguments
-**/
-function background (...args) {
+ **/
+function background(...args) {
     const cache = [ctx.strokeStyle, ctx.fillStyle]
     const matrix = ctx.getTransform()
     ctx.setTransform(1, 0, 0, 1, 0, 0)
@@ -124,16 +123,16 @@ function background (...args) {
  * sets the fill color for the shapes following the call
  * @param {...(string|number|Array)} args
  * @see {@link color} for the definition of the arguments
-**/
-function fill (...args) {
+ **/
+function fill(...args) {
     ctx.fillStyle = color(...args)
 }
 /**
  * sets the fill color for the shapes following the call
  * @param {...(string|number|Array)} args
  * @see {@link color} for the definition of the arguments
-**/
-function stroke (...args) {
+ **/
+function stroke(...args) {
     ctx.strokeStyle = color(...args)
 }
 /**
@@ -148,16 +147,16 @@ function stroke (...args) {
  * //draws the image at (0, 0) with the default width an' height
  * image(img, 0, 0) 
  * //draws the image at (0, 0) with the dimensions 400px by 400px
-**/
-function image (img, x, y, w = img.width, h = img.height) {
+ **/
+function image(img, x, y, w = img.width, h = img.height) {
     [x, y] = skiJSData.pos("image", x, y, w, h)
-    if(img instanceof ImageData) ctx.putImageData(img, x, y, w, h)
+    if (img instanceof ImageData) ctx.putImageData(img, x, y, w, h)
     else ctx.drawImage(img, x, y, w, h)
 }
 /**
  * draws a clear rectangle across the entire canvas
-**/
-function clear () {
+ **/
+function clear() {
     const matrix = ctx.getTransform()
     ctx.setTransform(1, 0, 0, 1, 0, 0)
     ctx.clearRect(0, 0, width, height)
@@ -165,14 +164,14 @@ function clear () {
 }
 /**
  * removes any stroke from the shapes to be drawn after the function call
-**/
-function noStroke () {
+ **/
+function noStroke() {
     ctx.strokeStyle = color(0, 0)
 }
 /**
  * removes any stroke from the shapes to be drawn after the function call
-**/
-function noFill () {
+ **/
+function noFill() {
     ctx.fillStyle = color(0, 0)
 }
 /**
@@ -185,8 +184,8 @@ function noFill () {
  * @example
  * rect(0, 0, 10, 10) 
  * //draws a rectangle at (0, 0) with dimensions 10px by 10px
-**/
-function rect (x, y, width, height, ...radius) {
+ **/
+function rect(x, y, width, height, ...radius) {
     [x, y] = skiJSData.pos("rect", x, y, width, height)
     if (radius.length > 0) {
         ctx.beginPath()
@@ -207,28 +206,29 @@ function rect (x, y, width, height, ...radius) {
  * @param {number} width -  the width of the text
  * 
  * @returns {string} - the string with proper line breaks.
-**/
-function wrapText (str, width) {
+ **/
+function wrapText(str, width) {
     str = str.split(/[ ]/)
-    let i = 0, phrase = "", result = ""
-    while(i < str.length){
+    let i = 0,
+        phrase = "",
+        result = ""
+    while (i < str.length) {
         const frag = str[i]
         const newLineCharIndex = frag.indexOf("\n")
-        if(newLineCharIndex >= 0){
-           phrase += frag.slice(0, newLineCharIndex + 1)
-           result += phrase
-           phrase = frag.slice(newLineCharIndex + 1, frag.length) + " "
-        }
-        else {
+        if (newLineCharIndex >= 0) {
+            phrase += frag.slice(0, newLineCharIndex + 1)
+            result += phrase
+            phrase = frag.slice(newLineCharIndex + 1, frag.length) + " "
+        } else {
             phrase += frag + " "
-            if(textWidth(phrase) > width){
+            if (textWidth(phrase) > width) {
                 result += phrase + "\n"
                 phrase = ""
             }
         }
         i++
     }
-    if(phrase.length > 0){
+    if (phrase.length > 0) {
         result += "\n" + phrase
     }
     return result
@@ -246,10 +246,10 @@ function wrapText (str, width) {
  * //draws "hello there!" on the center of the canvas
  * text("hello there!", width / 2, height / 2, 200, 100) 
  * //draws "hello there!" on the center of the canvas with a maximum width of 200px
-**/
-function text (msg, x, y, w, h) {
+ **/
+function text(msg, x, y, w, h) {
     msg = msg?.toString()
-    if(w) msg = wrapText(msg, w)
+    if (w) msg = wrapText(msg, w)
     if (msg.includes("\n")) {
         msg.split("\n").map((p, i) => {
             ctx.fillText(p, x, y + ((i - ((msg.split("\n")).length - 1) / 2) * (skiJSData.height + skiJSData.leading)))
@@ -268,8 +268,8 @@ function text (msg, x, y, w, h) {
  * //draws rectangles from the top-left corner
  * rectMode(CENTER)
  * //draws rectangles from their center
-**/
-function rectMode (m) {
+ **/
+function rectMode(m) {
     skiJSData.rect = m
 }
 /**
@@ -280,8 +280,8 @@ function rectMode (m) {
  * //draws ellipses from the top-left corner
  * ellipseMode(CENTER)
  * //draws ellipses from their center
-**/
-function ellipseMode (m) {
+ **/
+function ellipseMode(m) {
     skiJSData.ellipse = m
 }
 /**
@@ -292,8 +292,8 @@ function ellipseMode (m) {
  * //draws arcs from the top-left corner
  * arcMode(CENTER)
  * //draws arcs from their center
-**/
-function arcMode (m) {
+ **/
+function arcMode(m) {
     skiJSData.arc = m
 }
 /**
@@ -304,8 +304,8 @@ function arcMode (m) {
  * //draws rectangles from the top-left corner
  * imageMode(CENTER)
  * //draws rectangles from their center
-**/
-function imageMode (m) {
+ **/
+function imageMode(m) {
     skiJSData.image = m
 }
 /**
@@ -315,9 +315,8 @@ function imageMode (m) {
  * @example
  * textAlign(CENTER, CENTER)
  * //text will now be drawn from the center
-**/
-function textAlign (horizontal, vertical) {
-    //println(horizontal === CENTER, vertical === CENTER)
+ **/
+function textAlign(horizontal, vertical) {
     ctx.textAlign = horizontal === CENTER ? "center" : "start"
     ctx.textBaseline = vertical === CENTER ? "middle" : "hanging"
 }
@@ -326,8 +325,8 @@ function textAlign (horizontal, vertical) {
  * it's useless, just returns whatever you input as an argument.
  * @param {string} font
  * @return {string} font
-**/
-function createFont (font) {
+ **/
+function createFont(font) {
     return font
 }
 /**
@@ -336,8 +335,8 @@ function createFont (font) {
  * @example
  * textSize(20) 
  * //text will be drawn at 20px
-**/
-function textSize (size) {
+ **/
+function textSize(size) {
     skiJSData.height = size
     ctx.font = skiJSData.fontString(skiJSData.font, size)
 }
@@ -348,8 +347,8 @@ function textSize (size) {
  * @example
  * textFont("Arial", 12) 
  * //font is arial with size 12px
-**/
-function textFont (font, size = skiJSData.height) {
+ **/
+function textFont(font, size = skiJSData.height) {
     skiJSData.height !== size && (skiJSData.height = size)
     skiJSData.flags = []
     if ((/bold/i).test(font)) {
@@ -367,74 +366,77 @@ function textFont (font, size = skiJSData.height) {
 /**
  * sets the space between text on the y-axis
  * @param {number} val - leading in pix
-**/
-function textLeading (val) {
+ **/
+function textLeading(val) {
     skiJSData.leading = val
 }
 /**
  * find the width of a string given the current font an' font size
  * for strings with line breaks, it finds the largest width
  * @param {string} txt - text
-**/
-function textWidth (txt) {
+ **/
+function textWidth(txt) {
     return txt.split("\n").reduce((a, b) => max(a, ctx.measureText(b).width), 0)
 }
 /**
  * i honestly don't know. just ported the concept from PJS.
-**/
-function textAscent () {
+ **/
+function textAscent() {
     return ctx.measureText("a").fontBoundingBoxAscent
 }
 /**
  * i honestly don't know. just ported the concept from PJS.
-**/
-function textDescent () {
-    ctx.measureText("a").fontBoundingBoxDescent
+ **/
+function textDescent() {
+    return ctx.measureText("a").fontBoundingBoxDescent
 }
 /**
  * sets the stroke cap. see [`ctx.lineCap`]{@link https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineCap}
  * @param {string} mode - line cap value; use ski.js constants
-**/
-function strokeCap (mode) {
+ **/
+function strokeCap(mode) {
     ctx.lineCap = mode
 }
 /**
  * sets the stroke cap. see [`ctx.lineJoin`]{@link https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineJoin}
  * @param {string} mode - line join value; use ski.js constants
-**/
-function strokeJoin (mode) {
+ **/
+function strokeJoin(mode) {
     ctx.lineJoin = mode
 }
 /**
  * sets the stroke cap. see [`ctx.lineWidth`]{@link https://developer.mozilla.org/en-US/docs/Web/API/CanvasRenderingContext2D/lineWidth}
  * @param {string} weight - line width value; use ski.js constants
-**/
-function strokeWeight (weight) {
+ **/
+function strokeWeight(weight) {
     ctx.lineWidth = weight
 }
 /**
  * saves the current state of the canvas
-**/
-function pushStyle () {
+ **/
+function pushStyle() {
     ctx.save()
 }
 /**
  * restores the saved state of the canvas
-**/
-function popStyle () {
+ **/
+function popStyle() {
     ctx.restore()
 }
 /**
  * save the current transformation matrix state
-**/
-function pushMatrix () {
-    const { matrices: arr, matrixToArray: convert } = skiJSData
+ **/
+function pushMatrix() {
+    const {
+        matrices: arr,
+        matrixToArray: convert
+    } = skiJSData
     arr.push(convert(ctx.getTransform()))
 }
 /**
  * restores the saved transformation matrix state
-**/
-function popMatrix () {
+ **/
+function popMatrix() {
     const arr = new Float32Array(skiJSData.matrices.pop())
     const mat = DOMMatrix.fromFloat32Array(arr)
     ctx.setTransform(mat)
@@ -443,39 +445,40 @@ function popMatrix () {
  * translate given coordinates
  * @param {number} x
  * @param {number} y
-**/
-function translate (x, y) {
+ **/
+function translate(x, y) {
     ctx.transform(1, 0, 0, 1, x, y)
 }
 /**
  * rotate given an angle
  * @param {number} ang - rotation angle
-**/
-function rotate (ang) {
-    if(skiJSData.angle === DEGREES) ang = degrees(ang)
-    const cos = Math.cos, sin = Math.sin
+ **/
+function rotate(ang) {
+    if (skiJSData.angle === DEGREES) ang = degrees(ang)
+    const cos = Math.cos,
+        sin = Math.sin
     ctx.transform(cos(ang), sin(ang), -sin(ang), cos(ang), 0, 0)
 }
 /**
  * scale given a factor
  * @param {number} w - if only one arg, the scale factor; else the x scale factor.
  * @param {number} [h] - y scale factor
-**/
-function scale (w, h) {
+ **/
+function scale(w, h) {
     ctx.transform(w, 0, 0, h ? h : w, 0, 0)
 }
 /**
  * starts a new shape
-**/
-function beginShape () {
+ **/
+function beginShape() {
     skiJSData.path = []
 }
 /**
  * adds a vertex to a shape
  * @param {number} x
  * @param {number} y
-**/
-function vertex (x, y) {
+ **/
+function vertex(x, y) {
     skiJSData.path.push([x, y])
 }
 /**
@@ -485,8 +488,8 @@ function vertex (x, y) {
  * @param {number} cy - control y
  * @param {number} x
  * @param {number} y
-**/
-function curveVertex (cx, cy, x, y) {
+ **/
+function curveVertex(cx, cy, x, y) {
     skiJSData.path.push([cx, cy, x, y])
 }
 /**
@@ -498,8 +501,8 @@ function curveVertex (cx, cy, x, y) {
  * @param {number} c2y - control y 2
  * @param {number} x
  * @param {number} y
-**/
-function bezierVertex (c1x, c1y, c2x, c2y, x, y) {
+ **/
+function bezierVertex(c1x, c1y, c2x, c2y, x, y) {
     skiJSData.path.push([c1x, c1y, c2x, c2y, x, y])
 }
 /**
@@ -508,23 +511,22 @@ function bezierVertex (c1x, c1y, c2x, c2y, x, y) {
  * 'cuz i don't clear the path, semi-intentionally.
  * 
  * @param {boolean} [end] - use CLOSE, closes a shape by callin' ctx.closePath
-**/
-function endShape (end) {
+ **/
+function endShape(end) {
     const paths = skiJSData.path
     if (paths.length < 2 || paths[0].length !== 2) return
     ctx.beginPath()
     paths.forEach((path, index) => {
-        if(index === 0){
+        if (index === 0) {
             ctx.moveTo(...path)
-        }
-        else {
-            if(path.length === 2) ctx.lineTo(...path)
-            else if(path.length === 4) ctx.quadraticCurveTo(...path)
-            else if(path.length === 6) ctx.bezierCurveTo(...path)
+        } else {
+            if (path.length === 2) ctx.lineTo(...path)
+            else if (path.length === 4) ctx.quadraticCurveTo(...path)
+            else if (path.length === 6) ctx.bezierCurveTo(...path)
             else return
         }
     })
-    if(end) ctx.closePath()
+    if (end) ctx.closePath()
     ctx.fill()
     ctx.stroke()
 }
@@ -537,8 +539,8 @@ function endShape (end) {
  * @param {number} cy - control y
  * @param {number} ex - end x
  * @param {number} ey - end y
-**/
-function curve (sx, sy, cx, cy, ex, ey) {
+ **/
+function curve(sx, sy, cx, cy, ex, ey) {
     if (typeof ey !== "number") return
     beginShape()
     vertex(sx, sy)
@@ -556,8 +558,8 @@ function curve (sx, sy, cx, cy, ex, ey) {
  * @param {number} c2y - control y 2
  * @param {number} ex - end x
  * @param {number} ey - end y
-**/
-function bezier (sx, sy, c1x, c1y, c2x, c2y, ex, ey) {
+ **/
+function bezier(sx, sy, c1x, c1y, c2x, c2y, ex, ey) {
     if (typeof ey !== "number") return
     beginShape()
     vertex(sx, sy)
@@ -573,19 +575,19 @@ function bezier (sx, sy, c1x, c1y, c2x, c2y, ex, ey) {
  * @param {number} start - start angle
  * @param {number} stop - stop angle
  * @param {boolean} [close=false] - call endShape(CLOSE)
-**/
-function arc (x, y, w, h, start, stop, close = false) {
+ **/
+function arc(x, y, w, h, start, stop, close = false) {
     [x, y] = skiJSData.pos("arc", x, y, width, height)
     pushMatrix()
     translate(x, y)
-    if(w !== h){
-        if(w > h) scale(max(w, h) / min(w, h), 1)
+    if (w !== h) {
+        if (w > h) scale(max(w, h) / min(w, h), 1)
         else scale(1, max(w, h) / min(w, h))
     }
     ctx.beginPath()
-    if(ctx.fillStyle !== color(0, 0)) ctx.moveTo(0, 0)
+    if (ctx.fillStyle !== color(0, 0)) ctx.moveTo(0, 0)
     ctx.arc(0, 0, min(w, h) / 2, degrees(start), degrees(stop))
-    if(close) ctx.closePath()
+    if (close) ctx.closePath()
     popMatrix()
     ctx.fill()
     ctx.stroke()
@@ -596,8 +598,8 @@ function arc (x, y, w, h, start, stop, close = false) {
  * @param {number} y
  * @param {number} w - width
  * @param {number} h - height
-**/
-function ellipse (x, y, w, h) {
+ **/
+function ellipse(x, y, w, h) {
     ctx.beginPath()
     ctx.ellipse(x, y, w / 2, h / 2, 0, 0, TAU)
     ctx.fill()
@@ -613,8 +615,8 @@ function ellipse (x, y, w, h) {
  * @param {number} y3
  * @param {number} x4
  * @param {number} y4
-**/
-function quad (x1, y1, x2, y2, x3, y3, x4, y4) {
+ **/
+function quad(x1, y1, x2, y2, x3, y3, x4, y4) {
     beginShape()
     vertex(x1, y1)
     vertex(x2, y2)
@@ -630,8 +632,8 @@ function quad (x1, y1, x2, y2, x3, y3, x4, y4) {
  * @param {number} y2
  * @param {number} x3
  * @param {number} y3
-**/
-function triangle (x1, y1, x2, y2, x3, y3) {
+ **/
+function triangle(x1, y1, x2, y2, x3, y3) {
     beginShape()
     vertex(x1, y1)
     vertex(x2, y2)
@@ -642,8 +644,8 @@ function triangle (x1, y1, x2, y2, x3, y3) {
  * draws a point with stroke
  * @param {number} x
  * @param {number} y
-**/
-function point (x, y) {
+ **/
+function point(x, y) {
     if (ctx.strokeStyle !== color(0, 0)) {
         const cache = [ctx.strokeStyle, ctx.fillStyle]
         noStroke()
@@ -659,8 +661,8 @@ function point (x, y) {
  * @param {number} y1
  * @param {number} x2
  * @param {number} y2
-**/
-function line (x1, y1, x2, y2) {
+ **/
+function line(x1, y1, x2, y2) {
     ctx.beginPath()
     ctx.moveTo(x1, y1)
     ctx.lineTo(x2, y2)
@@ -682,17 +684,17 @@ function line (x1, y1, x2, y2) {
  * //returns the ImageData object for (0, 0) with dimensions 20px by 20px
  * get(canvas, 0, 0, 20, 20)
  * //returns the ImageData object for (0, 0) with dimensions 20px by 20px on canvas
-**/
-function get (...args) {
+ **/
+function get(...args) {
     const [x, y, w, h, src] = args
     switch (args.length) {
         case 0:
             return get(0, 0, width, height)
-        break
+            break
         case 2:
             data = ctx.getImageData(x, y, 1, 1).data
             return color(data[0], data[1], data[2], data[3])
-        break
+            break
         case 3: {
             const canvas = new OffscreenCanvas(w.width, w.height)
             const ctx = canvas.getContext("2d")
@@ -705,12 +707,12 @@ function get (...args) {
             return color(data[0], data[1], data[2], data[3])
         }
         break
-        case 4: 
+        case 4:
             const imageCanvas = new OffscreenCanvas(w, h)
             const context = imageCanvas.getContext("2d")
             context.putImageData(ctx.getImageData(x, y, w, h), 0, 0)
             return imageCanvas
-        break
+            break
         case 5: {
             const canvas = new OffscreenCanvas(src.width, src.height)
             const ctx = canvas.getContext("2d")
@@ -730,8 +732,8 @@ function get (...args) {
  * const img = get(0, 0, width, height)
  * set(document.getElementsByTagName("canvas")[0])
  * image(img, 0, 0)
-**/
-function mask () {
+ **/
+function mask() {
     ctx.globalCompositeOperation = "source-atop"
 }
 
@@ -791,19 +793,19 @@ function adoptCanvas() {
         key = e.key
         keyCode = e.keyCode
         keyIsPressed = true
-        keyPressed(e)        
+        keyPressed(e)
     }
-    canvas.onkeyup = e => {        
+    canvas.onkeyup = e => {
         e.preventDefault()
         key = e.key
         keyCode = e.keyCode
-        keyReleased(e)        
+        keyReleased(e)
     }
-    canvas.onkeypress = e => {        
+    canvas.onkeypress = e => {
         e.preventDefault()
         key = e.key
         keyCode = e.keyCode
-        keyTyped(e)        
+        keyTyped(e)
     }
 }
 
@@ -815,14 +817,14 @@ function rejectCanvas() {
     if (!canvas) return;
     canvas.onmousedown = null
     canvas.onmousemove = null
-    canvas.onmouseup   = null
+    canvas.onmouseup = null
     canvas.oncontextmenu = null
     canvas.onmouseover = null
-    canvas.onmouseout  = null
-    canvas.onwheel     = null
-    canvas.onkeydown   = null
-    canvas.onkeyup     = null
-    canvas.onkeypress  = null
+    canvas.onmouseout = null
+    canvas.onwheel = null
+    canvas.onkeydown = null
+    canvas.onkeyup = null
+    canvas.onkeypress = null
 }
 
 // data used by ski.js
@@ -837,8 +839,8 @@ skiJSData = {
     flags: [],
     fontString(font, size) {
         let flags = ""
-        if(this.flags.includes("bold")) flags += "bold "
-        if(this.flags.includes("italics")) flags += "italics "
+        if (this.flags.includes("bold")) flags += "bold "
+        if (this.flags.includes("italics")) flags += "italics "
         return (flags + `${size}px ` + font)
     },
     pos(type, x, y, w, h) {
@@ -866,97 +868,97 @@ fps = 60
  * alias for console.debug
  * @param {...*} args
  * 
-**/
-function debug (...args) {
+ **/
+function debug(...args) {
     console.debug(...args)
 }
 /**
  * alias for console.assert
  * @param {...*} args
-**/
-function isEqual (...args) {
+ **/
+function isEqual(...args) {
     console.assert(...args)
 }
 /**
  * returns the day
  * @returns {number} - day
-**/
-function day () {
+ **/
+function day() {
     return (new Date).getDate()
 }
 /**
  * returns the month
  * @returns {number} - month
-**/
-function month () {
+ **/
+function month() {
     return (new Date).getMonth()
 }
 /**
  * returns the year
  * @returns {number} - year
-**/
-function year () {
+ **/
+function year() {
     return (new Date).getYear()
 }
 /**
  * returns the hours
  * @returns {number} - hours
-**/
-function hour () {
+ **/
+function hour() {
     return (new Date).getHours()
 }
 /**
  * returns the minutes
  * @returns {number} - minutes
-**/
-function minute () {
+ **/
+function minute() {
     return (new Date).getMinutes()
 }
 /**
  * returns the seconds
  * @returns {number} - seconds
-**/
-function seconds () {
+ **/
+function seconds() {
     return (new Date).getSeconds()
 }
 /**
  * enables the context menu, so you can right-click an' save the canvas as an image.
-**/
-function enableContextMenu () {
+ **/
+function enableContextMenu() {
     canvas.oncontextmenu = true
 }
 /**
  * alias for document.body.style.cursor
  * @param {string} name - name of the cursor
-**/
-function cursor (name) {
+ **/
+function cursor(name) {
     document.body.style.cursor = name
 }
 /**
  * enables image smoothing
-**/
-function smooth () {
+ **/
+function smooth() {
     ctx.imageSmoothingEnabled = true
     ctx.imageSmoothingQuality = "high"
 }
 /**
  * disables image smoothing
-**/
-function noSmooth () {
+ **/
+function noSmooth() {
     ctx.imageSmoothingEnabled = false
     ctx.imageSmoothingQuality = "low"
 }
 /**
  * disables the draw function
-**/
-function noLoop () {
+ **/
+function noLoop() {
     skiJSData.draw = draw
     draw = 0
 }
 /**
  * enables the draw function
-**/
-function loop () {
+ **/
+function loop() {
     draw = skiJSData.draw || draw
 }
 
@@ -969,8 +971,8 @@ function loop () {
  * @param {number} a
  * @param {number} b
  * @return {number} - the maximum
-**/
-function max (a, b) {
+ **/
+function max(a, b) {
     return a > b ? a : b
 }
 /**
@@ -981,8 +983,8 @@ function max (a, b) {
  * @param {number} a
  * @param {number} b
  * @return {number} - the minimum
-**/
-function min (a, b) {
+ **/
+function min(a, b) {
     return a < b ? a : b
 }
 /**
@@ -990,8 +992,8 @@ function min (a, b) {
  * @param {number} a
  * @param {number} b
  * @returns {number} - the magnitude
-**/
-function mag (a, b) {
+ **/
+function mag(a, b) {
     return Math.sqrt((a ** 2) + (b ** 2))
 }
 /**
@@ -1001,8 +1003,8 @@ function mag (a, b) {
  * @param {number} x2
  * @param {number} y2
  * @returns {number} - the euclidean distance
-**/
-function dist (x1, y1, x2, y2) {
+ **/
+function dist(x1, y1, x2, y2) {
     return mag(x - X, y - Y)
 }
 /**
@@ -1012,8 +1014,8 @@ function dist (x1, y1, x2, y2) {
  * @param {number} x2
  * @param {number} y2
  * @returns {number} - the euclidean distance
-**/
-function manhattanDistance (x1, y1, x2, y2) {
+ **/
+function manhattanDistance(x1, y1, x2, y2) {
     return abs(x1 - x2) + abs(y1 - y2)
 }
 /**
@@ -1023,16 +1025,16 @@ function manhattanDistance (x1, y1, x2, y2) {
  * @param {number} x2
  * @param {number} y2
  * @returns {number} - the euclidean distance
-**/
-function chebyshevDistance (x1, y1, x2, y2) {
+ **/
+function chebyshevDistance(x1, y1, x2, y2) {
     return max(abs(x1 - x2), abs(y1 - y2))
 }
 /**
  * take the natural number to a number n
  * @param {number} n - power to raise the natural number to
  * @returns {number}
-**/
-function exp (n) {
+ **/
+function exp(n) {
     return Math.E ** n
 }
 /**
@@ -1041,8 +1043,8 @@ function exp (n) {
  * @param {number} low - lowest value
  * @param {number} high - highest value
  * @returns {number} - the normalized value
-**/
-function norm (val, low, high) {
+ **/
+function norm(val, low, high) {
     return (val - low) / (high - low)
 }
 /**
@@ -1053,8 +1055,8 @@ function norm (val, low, high) {
  * @param {number} c - lowest value of range 2
  * @param {number} d - highest value of range 2
  * @returns {number} - the mapped value
-**/
-function map (val, a, b, c, d) {
+ **/
+function map(val, a, b, c, d) {
     return c + (d - c) * norm(val, a, b)
 }
 /**
@@ -1063,8 +1065,8 @@ function map (val, a, b, c, d) {
  * @param {number} targ - value to interpolate to
  * @param {number} amt - amount to interpolate by
  * @returns {number} - interpolated value
-**/
-function lerp (val, targ, amt) {
+ **/
+function lerp(val, targ, amt) {
     return ((targ - val) * amt) + val
 }
 /**
@@ -1072,10 +1074,10 @@ function lerp (val, targ, amt) {
  * @param {number} [min] - if max, minimum value generated; else, maximum value generated with the minimum value being 0
  * @param {number} [max] - maximum value generated
  * @returns {number} - random value
-**/
-function random (min, max) {
-    if(max) return Math.random() * (max - min) + min
-    else if(min) return Math.random() * min
+ **/
+function random(min, max) {
+    if (max) return Math.random() * (max - min) + min
+    else if (min) return Math.random() * min
     else return Math.random()
 }
 /**
@@ -1084,8 +1086,8 @@ function random (min, max) {
  * @param {number} low - lowest value that the value can be
  * @param {number} high - highest value that the value can be
  * @returns {number} - constrained value
-**/
-function constrain (val, low, high) {
+ **/
+function constrain(val, low, high) {
     return min(max(val, low), high)
 }
 /**
@@ -1093,8 +1095,8 @@ function constrain (val, low, high) {
  * alias for Math.log
  * @param {number} n
  * @returns {number}
-**/
-function log (n){
+ **/
+function log(n) {
     return Math.log(n)
 }
 /**
@@ -1102,8 +1104,8 @@ function log (n){
  * alias for Math.sqrt
  * @param {number} n
  * @returns {number}
-**/
-function sqrt (n) {
+ **/
+function sqrt(n) {
     return Math.sqrt(n)
 }
 /**
@@ -1111,8 +1113,8 @@ function sqrt (n) {
  * alias for n ** 2
  * @param {number} n
  * @returns {number}
-**/
-function sq (n) {
+ **/
+function sq(n) {
     return n ** 2
 }
 /**
@@ -1121,48 +1123,48 @@ function sq (n) {
  * @param {number} a - base
  * @param {number} b - power
  * @returns {number}
-**/
-function pow (a, b) {
+ **/
+function pow(a, b) {
     return a ** b
 }
 /**
  * returns the absolute value of a number
  * @param {number} n
  * @returns {number}
-**/
-function abs (n) {
+ **/
+function abs(n) {
     return n < 0 ? -n : n
 }
 /**
  * returns the truncated number
  * @param {number} n
  * @returns {number}
-**/
-function trunc (n) {
+ **/
+function trunc(n) {
     return n | 0
 }
 /**
  * returns the floored number
  * @param {number} n
  * @returns {number}
-**/
-function floor (n) {
+ **/
+function floor(n) {
     return n < 0 ? (n | 0) - 1 : n | 0
 }
 /**
  * returns the ceilinged number
  * @param {number} n
  * @returns {number}
-**/
-function ceil (n) {
+ **/
+function ceil(n) {
     return floor(n) + 1
 }
 /**
  * returns the rounded number
  * @param {number} n
  * @returns {number}
-**/
-function round (n) {
+ **/
+function round(n) {
     return n - floor(n) < 0.5 ? floor(n) : ceil(n)
 }
 /** TODO **/
@@ -1171,9 +1173,9 @@ function round (n) {
  * alias for Math.sin
  * @param {number} ang - angle
  * @returns {number}
-**/
-function sin (ang) {
-    if(skiJSData.angle === DEGREES) ang = degrees(ang)
+ **/
+function sin(ang) {
+    if (skiJSData.angle === DEGREES) ang = degrees(ang)
     return Math.sin(ang)
 }
 /**
@@ -1181,9 +1183,9 @@ function sin (ang) {
  * alias for Math.cos
  * @param {number} ang - angle
  * @returns {number}
-**/
-function cos (ang) {
-    if(skiJSData.angle === DEGREES) ang = degrees(ang)
+ **/
+function cos(ang) {
+    if (skiJSData.angle === DEGREES) ang = degrees(ang)
     return Math.cos(ang)
 }
 /**
@@ -1191,9 +1193,9 @@ function cos (ang) {
  * alias for Math.tan
  * @param {number} ang - angle
  * @returns {number}
-**/
-function tan (ang) {
-    if(skiJSData.angle === DEGREES) ang = degrees(ang)
+ **/
+function tan(ang) {
+    if (skiJSData.angle === DEGREES) ang = degrees(ang)
     return Math.tan(ang)
 }
 /**
@@ -1201,9 +1203,9 @@ function tan (ang) {
  * alias for Math.acos
  * @param {number} ang - angle
  * @returns {number}
-**/
-function acos (ang) {
-    if(skiJSData.angle === DEGREES) ang = degrees(ang)
+ **/
+function acos(ang) {
+    if (skiJSData.angle === DEGREES) ang = degrees(ang)
     return Math.acos(ang)
 }
 /**
@@ -1211,9 +1213,9 @@ function acos (ang) {
  * alias for Math.asin
  * @param {number} ang - angle
  * @returns {number}
-**/
-function asin (ang) {
-    if(skiJSData.angle === DEGREES) ang = degrees(ang)
+ **/
+function asin(ang) {
+    if (skiJSData.angle === DEGREES) ang = degrees(ang)
     return Math.asin(ang)
 }
 /**
@@ -1221,10 +1223,10 @@ function asin (ang) {
  * alias for Math.atan
  * @param {number} ang - angle
  * @returns {number}
-**/
-function atan (ang) {
+ **/
+function atan(ang) {
     ang = Math.atan(ang)
-    if(skiJSData.angle === DEGREES) ang = radians(ang)
+    if (skiJSData.angle === DEGREES) ang = radians(ang)
     return ang
 }
 /**
@@ -1232,33 +1234,33 @@ function atan (ang) {
  * @param {number} y
  * @param {number} x
  * @returns {number}
-**/
-function atan2 (y, x) {
+ **/
+function atan2(y, x) {
     let ang = Math.atan2(y, x)
-    if(skiJSData.angle === DEGREES) ang = radians(ang)
+    if (skiJSData.angle === DEGREES) ang = radians(ang)
     return ang
 }
 /**
  * returns the radian value of an angle in degrees
  * @param {number} ang - angle
  * @returns {number}
-**/
-function radians (ang) {
+ **/
+function radians(ang) {
     return ang * (180 / PI)
 }
 /**
  * returns the degrees of an angle in radians
  * @param {number} ang - angle
  * @returns {number}
-**/
-function degrees (ang) {
+ **/
+function degrees(ang) {
     return ang * (PI / 180)
 }
 /**
  * sets the angle mode
  * @param {string} mode - use DEGREES or RADIANS
-**/
-function angleMode (mode) {
+ **/
+function angleMode(mode) {
     skiJSData.angle = mode
 }
 /**
@@ -1269,8 +1271,8 @@ function angleMode (mode) {
  * @param {number} d - control y 2
  * @param {number} t - value between 0 an' 1
  * @returns {number}
-**/
-function bezierPoint (a, b, c, d, t) {
+ **/
+function bezierPoint(a, b, c, d, t) {
     return (1 - t) * (1 - t) * (1 - t) * a + 3 * (1 - t) * (1 - t) * t * b + 3 * (1 - t) * t * t * c + t * t * t * d
 }
 /**
@@ -1281,15 +1283,15 @@ function bezierPoint (a, b, c, d, t) {
  * @param {number} d - control y 2
  * @param {number} t - value between 0 an' 1
  * @returns {number}
-**/
-function bezierTangent (a, b, c, d, t) {
+ **/
+function bezierTangent(a, b, c, d, t) {
     return (3 * t * t * (-a + 3 * b - 3 * c + d) + 6 * t * (a - 2 * b + c) + 3 * (-a + b))
 }
 /**
  * sets the color mode
  * @param {string} mode - use RGBA or HEX or HSL
-**/
-function colorMode (mode) {
+ **/
+function colorMode(mode) {
     return skiJSData.color = mode
 }
 /**
@@ -1319,8 +1321,8 @@ function colorMode (mode) {
  * //returns "#000"
  * color("rgba(25, 25, 25, 1)")
  * //returns "rgba(25, 25, 25, 1)"
-**/
-function color (...args) {
+ **/
+function color(...args) {
     if (typeof args[0] === "string" && args.length <= 1 && (/(#|rgb|hsl|rgba)/).test(args[0])) return args[0]
     args[0] instanceof Array && (args = args[0])
     if (typeof args[1] === "number" && (/rgb|rgba/).test(args[0])) {
@@ -1359,8 +1361,8 @@ function color (...args) {
  * @param {string} color2 - use `color`
  * @param {number} amt - amount to lerp
  * @returns {string} - the lerped color
-**/
-function lerpColor (color1, color2, amt) {
+ **/
+function lerpColor(color1, color2, amt) {
     if (typeof color1 !== "string" || typeof color2 !== "string" || skiJSData.color !== RGBA)
         return
     const [r1, g1, b1, a1] = color1.match(/\d{1,3}/g)
@@ -1373,8 +1375,8 @@ function lerpColor (color1, color2, amt) {
  * @params {number} [width] - width of the image
  * @params {number} [height] - height of the image
  * @returns {Promise}
-**/
-function getImage (src, width, height) {
+ **/
+function getImage(src, width, height) {
     return new Promise((resolve, reject) => {
         let img = loadImage(src, width, height)
         //resolve or reject
@@ -1388,15 +1390,15 @@ function getImage (src, width, height) {
  * @params {number} [width] - width of the image
  * @params {number} [height] - height of the image
  * @returns {Image}
-**/
-function loadImage (src, width, height) {
+ **/
+function loadImage(src, width, height) {
     let img
     //dimensions
-    if(width) img = new Image(width, height)
+    if (width) img = new Image(width, height)
     else img = new Image
     //source
     img.src = src
-    if(!(/khanacademy/).test(src)) img.crossOrigin = "anonymous"
+    if (!(/khanacademy/).test(src)) img.crossOrigin = "anonymous"
     return img
 }
 /**
@@ -1406,11 +1408,11 @@ function loadImage (src, width, height) {
  * @example
  * getFont("Roboto", "Comfortaa")
  * //fetches Roboto an' Comfortaa from Google Fonts
-**/
-function getFont (...fonts) {
-    return new Promise ((res, rej) => {
+ **/
+function getFont(...fonts) {
+    return new Promise((res, rej) => {
         // xxx HS16 - Efficiency :P
-        const link = loadFont(...fonts) 
+        const link = loadFont(...fonts)
         link.onload = () => res(link)
         link.onerror = () => reject("invalid or unaccessible fonts. not rlly, it's just an error lol. idk what went wrong, but you're router or DNS is blockin' fonts.googleapis.com")
     })
@@ -1422,8 +1424,8 @@ function getFont (...fonts) {
  * @example
  * loadFont("Roboto", "Comfortaa")
  * //fetches Roboto an' Comfortaa from Google Fonts
-**/
-function loadFont (...fonts) {
+ **/
+function loadFont(...fonts) {
     const link = document.createElement("link")
     link.rel = "stylesheet"
     link.href = `https://fonts.googleapis.com/css?family=${fonts.join("|").replace(/ /g, "+")}`
@@ -1435,22 +1437,23 @@ function loadFont (...fonts) {
 /**
  * sets the frame rate
  * @params {number} rate - the frame rate in fps; note that 60 is the max due to JS restrictions
-**/
-function frameRate (rate) {
+ **/
+function frameRate(rate) {
     skiJSData.rate = rate
 }
 /**
  * returns the milliseconds that have elapsed since the program started.
  * @returns {number}
-**/
-function millis () {
+ **/
+function millis() {
     return skiJSData.millis
 }
 frameCount = 0
-delta = 1000 / 60
+delta = 50 / 3
 then = performance.now()
 skiJSData.start = performance.now()
-function raf (time) {
+
+function raf(time) {
     requestAnimationFrame(raf)
     delta = time - then
     let ms = 1000 / skiJSData.rate
@@ -1459,7 +1462,7 @@ function raf (time) {
     then = time - overflow
     delta -= overflow
     draw_standin(time)
-    frameCount += 1
+    frameCount++
     skiJSData.millis = performance.now() - skiJSData.start
     fps = 1000 / delta
 }
@@ -1473,7 +1476,7 @@ function raf (time) {
  * when you set `draw`, the `draw_standin` function is set an' `raf` is run.
  * there is an argument that you can call from draw, time which works much like
  * performance.now().
-**/
+ **/
 Object.defineProperty(window, "draw", {
     get() {
         return draw_standin
@@ -1488,4 +1491,6 @@ Object.defineProperty(window, "draw", {
 // for the KA environment
 for (let i = requestAnimationFrame(() => 0); i--;) cancelAnimationFrame(i)
 
-//whew.
+// whew.
+
+// easter egg?
