@@ -12,9 +12,9 @@
 
 <strong>[WebGLFundamentals](https://webglfundamentals.org/)</strong> - for the basic WebGL setup for the image filterz
 
-<strong>[HSstudent16](https://github.com/HSstudent16)</strong> - for the circle-line physix/collision algorithm which has been modified & for fixin' a bug in <code>print.js</code>, and improvin' the event listeners
+<strong>[HSstudent16](https://github.com/HSstudent16)</strong> - for the circle-line physix/collision algorithm which has been modified & for fixin' a bug in <code>print.js</code>, improvin' the event listeners, an' some fixes here an' there for v1.9.0
 
-<strong>[TheDark](https://github.com/99TheDark)</strong> - for the mouseX & mouseY calculations, the suggestion for pushMatrix/popMatrix that did not behave like pushStyle/popStyle, an' a quick fix for print.js from v1.8.14 to v1.8.15
+<strong>[TheDark](https://github.com/99TheDark)</strong> - for the mouseX & mouseY calculations, the suggestion for pushMatrix/popMatrix that did not behave like pushStyle/popStyle, an' a quick fix for print.js from v1.8.14 to v1.8.15. also for causin' me pain for half an hour 'cuz he doesn't know how to truly handle transformations with <code>ctx.setTransform</code> even tho he's the one who brought it up lol.
 
 <strong>[Promise](https://github.com/PromiseCoder)</strong> - for a myriad of suggestions for ski.js
 
