@@ -1,118 +1,298 @@
+//vector.js has a dependency of main.js
+/**
+ * creates a new 2D or 3D vector
+ * @class
+**/
 class Vector {
-	constructor(x=0, y=0, z=0) {
-		this.x = x
-		this.y = y
-		this.z = z
-	}
-	set(v, y=false, z) {
-		!y ? this.set(v.x || v[0] || 0, v.y || v[1] || 0, v.z || v[2] || 0) : (this.x = v || 0, this.y = y || 0, this.z = z || 0)
-	}
-	get() {
-		return new Vector(this.x,this.y,this.z)
-	}
-	mag() {
-		return Math.sqrt(this.x ** 2 + this.y ** 2 + this.z ** 2)
-	}
-	magSq() {
-		return (this.x ** 2 + this.y ** 2 + this.z ** 2)
-	}
-	setMag(v, len=false) {
-		if (!len) {
-			this.normalize()
-			this.mult(v)
-		} else {
-			v.normalize()
-			v.mult(len)
-			return v
-		}
-	}
-	add(v, y=false, z) {
-		[this.x,this.y,this.z] = !y ? [this.x + v.x, this.y + v.y, this.z + v.z] : [this.x + v, this.y + y, this.z + z]
-	}
-	sub(v, y=false, z) {
-		!y ? this.add(-v) : this.add(-v, -y, -z)
-	}
-	mult(v) {
-		[this.x,this.y,this.z] = typeof v === 'number' ? [this.x * v, this.y * v, this.z * v] : [this.x * v.x, this.y * v.y, this.z * v.z]
-	}
-	div(v) {
-		[this.x,this.y,this.z] = typeof v === 'number' ? [this.x / v, this.y / v, this.z / v] : [this.x / v.x, this.y / v.y, this.z / v.z]
-	}
-	rotate(ang) {
-		const d = ang=>ang * (Math.PI / 180)
-		  , c = Math.cos
-		  , s = Math.sin[this.x,
-		this.y] = [c(d(ang)) * this.x - s(d(ang)) * this.y, s(d(ang)) * this.x + c(d(ang)) * this.y]
-	}
-	dist(v) {
-		return Math.sqrt(((this.x - v.x) * (this.x - v.x)) + ((this.y - v.y) * (this.y - v.y)) + ((this.z - v.z) * (this.z - v.z)))
-	}
-	dot(v, y=false, z) {
-		return !y ? (this.x * v.x + this.y * v.y + this.z * v.z) : (this.x * v + this.y * y + this.z * z)
-	}
-	cross(v) {
-		return new Vector(this.y * v.z - v.y * this.z,this.z * v.x - v.z * this.x,this.x * v.y - v.x * this.y)
-	}
-	lerp(v, A, z=false, amt) {
-		function l (v, t, a) {
-			return (t - v) * a + v
-		}
-		[this.x,this.y,this.z] = !z ? [l(this.x, v.x, A), l(this.y, v.y, A), l(this.z, v.z, A)] : [l(this.x, v, amt), l(this.y, A, amt), l(this.z, z, amt)]
-	}
-	normalize() {
-		this.mag() > 0 && this.div(this.mag())
-	}
-	limit(high) {
-		this.mag() > high && (this.normalize(),
-		this.mult(high))
-	}
-	heading() {
-		return -Math.atan2(-this.y, this.x)
-	}
-	heading2d() {
-		this.heading()
-	}
-	array() {
-		return [this.x, this.y, this.z]
-	}
-	toString() {
-		return this.array().toString()
-	}
-	static fromAngle(ang, v=new Vector(), m=1) {
-		const c = Math.cos
-		  , s = Math.sin
-		  , d = ang=>ang * (Math.PI / 180)
-		v.x = c(d(ang)) * m
-		v.y = s(d(ang)) * m
-		return v
-	}
-	static random2d(v) {
-		const r = Math.random
-		return Vector.fromAngle(r() * 360, v)
-	}
-	static random3d(v=false) {
-		const r = Math.random
-		  , S = Math.sqrt
-		  , c = Math.cos
-		  , s = Math.sin
-		const ang = r() * (Math.PI * 2)
-		  , z = r() * 2 - 1
-		  , m = S(1 - z ** 2)
-		  , x = m * c(ang)
-		  , y = m * s(ang)
-		!v ? (v = new Vector(x,y,z)) : v.set(x, y, z)
-		return v
-	}
-	static sub(v, V) {
-		return new Vector(v.x - V.x,v.y - V.y,!v.z && !V.z ? 0 : v.z - V.z)
-	}
-	static angleBetween(v, V) {
-		const a = Math.acos
-		return a(v.dot(V) / (v.mag() * V.mag()))
-	}
-	static lerp(v, V, A) {
-		v = new Vector(v.x,v.y,v.z)
-		v.lerp(V, A)
-		return v
-	}
+    /**
+     * @constructor
+     * @param {number} [x=0]
+     * @param {number} [y=0]
+     * @param {number} [z=0]
+    **/
+    constructor (x = 0, y = 0, z = 0) {
+        this.x = x
+        this.y = y
+        this.z = z
+    }
+    /**
+     * returns a new vector with the same (x, y, z) values
+     * @returns {Vector} - copied vector
+    **/
+    get () {
+        return new Vector(this.x, this.y, this.z)
+    }
+    /**
+     * sets the value of a vector
+     * @param {(number|Vector|Array|{x: number, y: number})} [v]
+     * @param {number} [y]
+     * @param {number} [z]
+     * @see {@link Vector.from} for parameters
+    **/
+    set (v, y, z) {
+        Object.assign(this, Vector.from(v, y, z))
+    }
+    /**
+     * returns the magnitude of the vector
+     * @returns {number} - the magnitude
+    **/
+    mag () {
+        return sqrt(sq(this.x) + sq(this.y) + sq(this.z))
+    }
+    /**
+     * returns the squared magnitude of the vector
+     * @returns {number} - the squared magnitude
+    **/
+    magSq () {
+        return sq(this.x) + sq(this.y) + sq(this.z)
+    }
+    /**
+     * sets the magnitude of the vector
+     * @param {(number|Vector)} vec - length or vector
+     * @param {number} [len] - length
+     * @returns {Vector} - only if len is defined
+    **/
+    setMag (vec, len) {
+        if(len){
+            vec.normalize()
+            vec.mult(len)
+            return vec
+        }
+        else {
+            this.normalize()
+            this.mult(len)
+        }
+    }
+    /**
+     * adds two vectors together
+     * @param {(number|Vector|Array|{x: number, y: number})} [v]
+     * @param {number} [y]
+     * @param {number} [z]
+     * @see {@link Vector.from} for parameters
+    **/
+    add (v, y, z) {
+        let vec = Vector.from(v, y, z)
+        this.x += vec.x
+        this.y += vec.y
+        this.z += vec.z
+    }
+    /**
+     * subtracts one vector from another
+     * @param {(number|Vector|Array|{x: number, y: number})} [v]
+     * @param {number} [y]
+     * @param {number} [z]
+     * @see {@link Vector.from} for parameters
+    **/
+    sub (v, y, z) {
+        let vec = Vector.from(v, y, z)
+        this.x -= vec.x
+        this.y -= vec.y
+        this.z -= vec.z
+    }
+    /**
+     * multiply two vectors together
+     * @param {(number|Vector|Array|{x: number, y: number})} [v]
+     * @param {number} [y]
+     * @param {number} [z]
+     * @see {@link Vector.from} for parameters
+    **/
+    mult (v, y, z) {
+        let vec = Vector.from(x, y, z)
+        this.x *= vec.x
+        this.y *= vec.y
+        this.z *= vec.z
+    }
+    /**
+     * divide one vector from another
+     * @param {(number|Vector|Array|{x: number, y: number})} [v]
+     * @param {number} [y]
+     * @param {number} [z]
+     * @see {@link Vector.from} for parameters
+    **/
+    div (x, y, z) {
+        let vec = Vector.from(x, y, z)
+        this.x /= vec.x
+        this.y /= vec.y
+        this.z /= vec.z
+    }
+    /**
+     * rotates a vector a certain angle
+     * for 2D vectors only
+     * @param {number} ang - angle
+    **/
+    rotate (ang) {
+        if(skiJSData.angle === DEGREES) ang = degrees(ang)
+        this.x = cos(ang) * this.x - sin(ang) * this.y
+        this.y = sin(ang) * this.x + cos(ang) * this.y
+    }
+    /**
+     * gets the distance between two vectors
+     * @param {Vector} vec - vector
+     * @returns {number} - the distance
+    **/
+    dist (vec) {
+        return sqrt(sq(this.x - vec.x) + sq(this.y - vec.y) + sq(this.z - vec.z))
+    }
+    /**
+     * get the dot product of two vectors
+     * @param {(number|Vector|Array|{x: number, y: number})} [v]
+     * @param {number} [y]
+     * @param {number} [z]
+     * @see {@link Vector.from} for parameters
+     * @returns {number} - the dot product
+    **/
+    dot (v, y, z) {
+        let vec = Vector.from(v, y, z)
+        return this.x * vec.x + this.y * vec.y + this.z * vec.z
+    }
+    /**
+     * get the cross product of two vectors
+     * @param {(number|Vector|Array|{x: number, y: number})} [v]
+     * @param {number} [y]
+     * @param {number} [z]
+     * @see {@link Vector.from} for parameters
+     * @returns {Vector} - the cross product
+    **/
+    cross (v, y, z) {
+        let vec = Vector.from(v, y, z)
+        let x = this.x
+        y = this.y
+        z = this.z
+        let vx = vec.x, vy = vec.y, vz = vec.z
+        return new Vector(
+            y * vz - vy * z, 
+            z * vx - vz * x,
+            x * vy - vx * y
+        )
+    }
+    /**
+     * lerps a vector toward another
+     * @param {(number|Vector|Array|{x: number, y: number})} [v]
+     * @param {number} [y]
+     * @param {number} [z]
+     * @see {@link Vector.from} for parameters
+    **/
+    lerp (v, y, z, amt) {
+        let vec = typeof v === "object" ? Vector.from(v) : Vector.from(v, y, z)
+        amt = amt ?? y
+        this.x = lerp(this.x, vec.x, amt)
+        this.y = lerp(this.y, vec.y, amt)
+        this.z = lerp(this.z, vec.z, amt)
+    }
+    /**
+     * normalizes a vector to length 1
+    **/
+    normalize () {
+        const mag = this.mag()
+        if(mag > 0) this.div(mag)
+    }
+    /**
+     * limit the length of a vector
+     * @param {number} len - length
+    **/
+    limit (len) {
+        if(this.mag() > len){
+            this.normalize()
+            this.mult(len)
+        }
+    }
+    /**
+     * returns the angle of the vector
+     * only for 2D vectors
+     * @returns {number} - angle
+    **/
+    heading () {
+        return atan2(-this.y, this.x)
+    }
+    /**
+     * returns the object form of the vector
+     * @returns {{x: number, y: number, z: number}} - the object
+    **/
+    object () {
+        return {x: this.x, y: this.y, z: this.z}
+    }
+    /**
+     * returns the array form of the vector
+     * @returns {number[]} - the array
+    **/
+    array () {
+        return [this.x, this.y, this.z]
+    }
+    /**
+     * returns the string form of the vector
+     * @returns {string} - the string of the vector coordinates
+    **/
+    toString () {
+        return `<${this.x}, ${this.y}, ${this.z}>`
+    }
+    /**
+     * takes any range of values an' makes 'em a vector.
+     * aka magic.
+     * @param {(number|Vector|Array|{x: number, y: number})} [v] - if y, Vector, object, or array of values representing the vector; else, x coordinate.
+     * @param {number} [y]
+     * @param {number} [z=0]
+     * @returns {Vector}
+    **/
+    static from (v, y, z = 0) {
+        if(v instanceof Vector){
+            return new Vector(v.x, v.y, v.z)
+        }
+        else if(v instanceof Array){
+            return new Vector(v[0], v[1], v[2])
+        }
+        else {
+            return new Vector(v, y, z)
+        }
+    }
+    /**
+     * creates a vector from an angle
+     * @param {number} ang - angle
+     * @param {Vector} [vec=new Vector] - vector
+     * @returns {Vector} - the vector
+    **/
+    static fromAngle(ang, vec = new Vector){
+        if(skiJSData.angle === DEGREES) ang = degrees(ang)
+        vec.x = cos(ang)
+        vec.y = sin(ang)
+        return vec
+    }
+    /**
+     * creates a random 2D vector
+     * @param {Vector} [vec=new Vector] - vector
+     * @returns {Vector} - the vector
+    **/
+    static random2D (vec = new Vector) {
+        if(skiJSData.angle === DEGREES){
+            return Vector.fromAngle(random(360), vec)
+        }
+        else {
+            return Vector.fromAngle(random(TAU), vec)
+        }
+    }
+    /**
+     * creates a random 3D vector
+     * @param {Vector} [vec=new Vector] - vector
+     * @returns {Vector} - the vector
+    **/
+    static random3D (vec = new Vector) {
+        let ang
+        if(skiJSData.angle === DEGREES) ang = random(360)
+        else ang = random(TAU)
+        
+        let z = random(2) - 1
+        let mag = sqrt(1 - sq(vz))
+        let x = cos(ang) * mag
+        let y = sin(ang) * mag
+        vec.set(x, y, z)
+        return vec
+    }
+    /**
+     * returns the angle between two vectors
+     * @param {Vector} vec1
+     * @param {Vector} vec2
+     * @returns {number} - angle
+    **/
+    static angleBetween (vec1, vec2) {
+        return acos(vec1.dot(vec2) / (vec1.mag() * vec2.mag()))
+    }
 }
