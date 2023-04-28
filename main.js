@@ -39,7 +39,7 @@ LEFT_BUTTON = 0
 RIGHT_BUTTON = 2
 
 // setup the canvas
-canvas = document.getElementsByTagName("canvas")[0]
+canvas = null
 ctx = null
 
 //all canvas-related functions
@@ -55,6 +55,10 @@ ctx = null
  * //resizes the resolution an' dimension of the canvas to 600px by 600px
 **/
 function size (w, h, css) {
+    if (!canvas || !ctx) {
+        canvas = document.querySelectorAll("canvas,canvas.skijs,canvas[data-skijs]")[0]
+        set(canvas)
+    }
     width = canvas.width = w
     height = canvas.height = h
     css && (canvas.style.width = `${w}px`, canvas.style.height = `${h}px`)
@@ -1480,9 +1484,6 @@ Object.defineProperty(window, "draw", {
     },
     configurable: true
 })
-
-// xxx HS16 - Bind the listeners & set up rendering context
-if (canvas) set(canvas);
 
 // for the KA environment
 for (let i = requestAnimationFrame(() => 0); i--;) cancelAnimationFrame(i)
