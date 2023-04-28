@@ -798,8 +798,6 @@ skiJSData = {
     ellipse: CENTER,
     arc: CENTER,
     image: CORNER,
-    angle: DEGREES,
-    color: RGBA,
     leading: 0,
     height: 12,
     flags: [],
@@ -822,6 +820,8 @@ skiJSData = {
     millis: 0,
     start: 0,
     draw: 0,
+    angle: DEGREES,
+    color: RGBA,
 }
 
 // FPS
