@@ -98,14 +98,14 @@ function set (...args) {
 **/
 function background (...args) {
     const cache = [ctx.strokeStyle, ctx.fillStyle]
-    ctx.save()
-    ctx.reset()
+    const matrix = ctx.getTransform()
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
     ctx.strokeStyle = "rgba(0, 0, 0, 0)"
     ctx.fillStyle = color(...args)
     ctx.fillRect(0, 0, canvas.width, canvas.height)
     ctx.strokeStyle = cache[0]
     ctx.fillStyle = cache[1]
-    ctx.restore()
+    ctx.setTransform(matrix)
 }
 /**
  * sets the fill color for the shapes following the call
@@ -145,10 +145,10 @@ function image (img, x, y, w = img.width, h = img.height) {
  * draws a clear rectangle across the entire canvas
 **/
 function clear () {
-    ctx.save()
-    ctx.reset()
+    const matrix = ctx.getTransform()
+    ctx.setTransform(1, 0, 0, 1, 0, 0)
     ctx.clearRect(0, 0, width, height)
-    ctx.restore()
+    ctx.setTransform(matrix)
 }
 /**
  * removes any stroke from the shapes to be drawn after the function call
@@ -805,7 +805,7 @@ skiJSData = {
         let flags = ""
         if(this.flags.includes("bold")) flags += "bold "
         if(this.flags.includes("italics")) flags += "italics "
-        return flags + `${size}px ${font}`
+        return (flags + `${size}px ` + font)
     },
     pos(type, x, y, w, h) {
         return type === "rect" || type === "image" ? this[type] < 1 ? [x, y] : [x - w / 2, y - h / 2] : this[type] < 1 ? [x + w / 2, y + w / 2] : [x, y]
