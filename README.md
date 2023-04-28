@@ -2,7 +2,8 @@
 
 ski.js [![CodeFactor](https://www.codefactor.io/repository/github/thelegendski/ski.js/badge)](https://www.codefactor.io/repository/github/thelegendski/ski.js) [![](https://data.jsdelivr.com/v1/package/gh/thelegendski/ski.js/badge)](https://www.jsdelivr.com/package/gh/thelegendski/ski.js)
 
-tiny [minified version is 12.7kb], fast, efficient, easy-to-use canvas library for the web
+tiny [minified version is 13.2 KB], fast, efficient, easy-to-use canvas library for the web
+like rlly tiny. like rlly fast. crazy, crazy fast. absurdly efficient. absolutely ridiculously efficient.
 
 closely modeled after <strong>[Processing.js](https://github.com/processing-js/processing-js)</strong>. no code, unless noted, has been taken from Processing.js.
 
