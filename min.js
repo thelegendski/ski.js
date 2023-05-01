@@ -182,7 +182,7 @@ function mag (a, b) {
  * @returns {number} - the euclidean distance
 **/
 function dist (x1, y1, x2, y2) {
-    return mag(x - X, y - Y)
+    return mag(x2 - x1, y2 - y1)
 }
 /**
  * returns the manhattan distance between two coordinates
