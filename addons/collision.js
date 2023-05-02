@@ -1,6 +1,7 @@
 //collision.js has a dependency of main.js
 /**
  * the collision object
+ * all collision methods are prefixed with subjectObject 'fore their method
  * @namespace
 **/
 var collision = {
@@ -15,7 +16,11 @@ var collision = {
     dist (x1, y1, x2, y2) {
       return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1)
     },
-	rectCircle: {
+    /**
+     * the circle-rect collision object
+     * @namespace
+    **/
+	circleRect: {
 	    /**
 	     * returns whether a circle and a rectangle are colliding
          * @param {{x: number, y: number, size: number}} circle
@@ -65,6 +70,10 @@ var collision = {
             }
         },
 	},
+    /**
+     * the circle-circle collision object
+     * @namespace
+    **/
     circleCircle: {
         /**
 	     * returns whether a circle and a circle are colliding
@@ -92,6 +101,10 @@ var collision = {
             }
         },
     },
+    /**
+     * the line-line collision object
+     * @namespace
+    **/
     lineLine: {
         /**
          * @ignore
@@ -146,6 +159,10 @@ var collision = {
             return {x: point1.x + (e.x * s), y: point1.y + (e.y * s)}
         }
     },
+    /**
+     * the circle-line collision object
+     * @namespace
+    **/
     circleLine: {
         /**
          * returns true if a circle is colliding with a line
