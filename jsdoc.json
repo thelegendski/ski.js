@@ -1,0 +1,43 @@
+{
+    "source": {
+        "include": ["main.js", "addons/collision.js", "addons/print.js", "addons/vector.js"]
+    },
+    "plugins": ["plugins/markdown"],
+    "opts": {
+        "encoding": "utf8",
+        "destination": "docs/",
+        "readme": "README.md",
+        "recurse": true,
+        "verbose": true,
+        "template": "node_modules/clean-jsdoc-theme",
+        "theme_opts": {
+            "search": false,
+            "default_theme": "dark",
+            "menu": [
+                {
+                    "title": "GitHub",
+                    "link": "https://github.com/thelegendski/ski.js",
+                    "target": "_blank"
+                }
+            ],
+            "meta": [
+                {
+                    "name": "author",
+                    "content": "thelegendski"
+                },
+                {
+                    "name": "description",
+                    "content": "crazy small, fast canvas library"
+                }
+            ],
+            "base_url": "https://thelegendski.github.io/ski.js/docs/",
+            "favicon": "../ski.js pfp.png",
+            "homepageTitle": "ski.js",
+            "title": "ski.js"
+        }
+    },
+    "markdown": {
+        "hardwrap": false,
+        "idInHeading": true
+    }
+}

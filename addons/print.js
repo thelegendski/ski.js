@@ -1,28 +1,43 @@
-var println = (...args) => {
-    closer.style.display === "none" && [...logger.childNodes].forEach(child => child.classList.contains('line') && logger.removeChild(child))
+var logger = document.createElement("div"),
+closer = document.createElement("span"),
+style  = document.createElement("style"),
+skiJSData = skiJSData ?? {}
+
+/**
+ * prints out any values to a homemade console
+ * each argument is printed out on a new line
+ * @param {...*} args
+**/
+function println (...args) {
+    closer.style.display === "none" && [...logger.childNodes].forEach(child => child.classList.contains("line") && logger.removeChild(child))
     logger.style.animation = "0.3s forwards open"
     closer.style.display = "flex"
+    args = args.map(arg => {
+        let str = ""
+        if(arg) str = arg.toString()
+        else str = arg + ""
+        return str.split("\n")
+    }).flat(1)
     args.forEach(arg => {
-        const div = document.createElement('div')
-        div.setHTML(arg.toString(), new Sanitizer({allowElements: ['a']}))
-        div.setAttribute('class', 'line')
-        div.setAttribute('display', 'flex')
-        div.setAttribute('width', '100vw')
+        const div = document.createElement("div")
+        div.setHTML(arg, new Sanitizer({allowElements: ["a", "span"]}))
+        div.setAttribute("class", "line")
+        div.setAttribute("display", "flex")
+        div.setAttribute("width", "100vw")
         logger.appendChild(div)
     })
-    printData.print = true
-},
-clearLogs = () => {
-    if(!printData.print) return
+    skiJSData.print = true
+}
+/**
+ * clears the console
+**/
+function clearLogs () {
+    if(!skiJSData.print) return
     logger.style.animation = "0.5s forwards close"
     closer.style.display = "none"
-    printData.print = false
-},
-logger = document.createElement('div'),
-closer = document.createElement('span'),
-style  = document.createElement('style')
-var printData = skiJSData ?? {}
-
+    skiJSData.print = false
+}
+      
 style.innerHTML = `
 @keyframes close {
     from {
@@ -50,7 +65,7 @@ style.innerHTML = `
 }
 @font-face {
     font-family: "println console";
-    src: url(https://fonts.gstatic.com/s/nunito/v25/XRXI3I6Li01BKofiOc5wtlZ2di8HDFwmdTQ3jw.woff2) format('woff2');
+    src: url(https://fonts.gstatic.com/s/nunito/v25/XRXI3I6Li01BKofiOc5wtlZ2di8HDFwmdTQ3jw.woff2) format("woff2");
 }
 .logger {
     background: rgba(0, 0, 0, 0.5);
@@ -64,6 +79,7 @@ style.innerHTML = `
     color: rgba(250, 250, 250);
     z-index: 1e3;
     box-sizing: border-box;
+    resize: vertical;
 }
 .close {
     position: fixed;
@@ -96,13 +112,13 @@ style.innerHTML = `
     transition: 0.3s;
 }
 `
-closer.setAttribute('class', 'close')
-closer.setHTML('X')
-logger.setAttribute('class', 'logger')
-logger.onclick = e => e.target.classList.contains('close') && clearLogs()
+closer.setAttribute("class", "close")
+closer.setHTML("X")
+logger.setAttribute("class", "logger")
+logger.onclick = e => e.target.classList.contains("close") && clearLogs()
 
 document.head.appendChild(style)
 logger.appendChild(closer)
 document.body.appendChild(logger)
 
-printData.print = false
+skiJSData.print = false
