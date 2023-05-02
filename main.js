@@ -68,7 +68,7 @@ function size (w, h, css) {
  * 
  * xxx HS16 - Now attaches the proper event listeners to the canvas.
  * 
- * @param {...(HTMLCanvasElement|OffscreenCanvas|number} [args] - argument for the set function
+ * @param {...(HTMLCanvasElement|OffscreenCanvas|number)} [args] - argument for the set function
  * @example
  * set() 
  * //sets the canvas to a new OffscreenCanvas with the same width an' height of the current canvas
@@ -138,7 +138,7 @@ function stroke (...args) {
 }
 /**
  * draws an ImageData object, HTMLCanvasElement, or HTMLImageElement on the canvas
- * @param {HTMLCanvasElement|ImageData|HTMLImageElement} img image to be drawn
+ * @param {(HTMLCanvasElement|ImageData|HTMLImageElement)} img image to be drawn
  * @param {number} x
  * @param {number} y
  * @param {number} [w=img.width] - the width of the image. defaults to the width of the image. i mean what else would it default too lol?
@@ -262,7 +262,7 @@ function text (msg, x, y, w, h) {
 }
 /**
  * sets the positionin' mode for rectangles
- * @param {number=CORNER} m - mode; please only use CORNER an' CENTER or 0 an' 1
+ * @param {number} [m=CORNER] - mode; please only use CORNER an' CENTER or 0 an' 1
  * @example
  * rectMode(CORNER)
  * //draws rectangles from the top-left corner
@@ -274,7 +274,7 @@ function rectMode (m) {
 }
 /**
  * sets the positionin' mode for ellipses
- * @param {number=CENTER} m - mode; please only use CORNER an' CENTER or 0 an' 1
+ * @param {number} [m=CENTER] - mode; please only use CORNER an' CENTER or 0 an' 1
  * @example
  * ellipseMode(CORNER)
  * //draws ellipses from the top-left corner
@@ -286,7 +286,7 @@ function ellipseMode (m) {
 }
 /**
  * sets the positionin' mode for arcs
- * @param {number=CENTER} m - mode; please only use CORNER an' CENTER or 0 an' 1
+ * @param {number} [m=CENTER] - mode; please only use CORNER an' CENTER or 0 an' 1
  * @example
  * arcMode(CORNER)
  * //draws arcs from the top-left corner
@@ -298,7 +298,7 @@ function arcMode (m) {
 }
 /**
  * sets the positionin' mode for images
- * @param {number=CORNER} m - mode; please only use CORNER an' CENTER or 0 an' 1
+ * @param {number} [m=CORNER] - mode; please only use CORNER an' CENTER or 0 an' 1
  * @example
  * imageMode(CORNER)
  * //draws rectangles from the top-left corner
@@ -310,8 +310,8 @@ function imageMode (m) {
 }
 /**
  * aligns the text drawn on the canvas
- * @param {number=CORNER} horiztonal - horizontal alignment
- * @param {number=CORNER} vertical - vertical alignment
+ * @param {number} [horiztonal=CORNER] - horizontal alignment
+ * @param {number} [vertical=CORNER] - vertical alignment
  * @example
  * textAlign(CENTER, CENTER)
  * //text will now be drawn from the center
