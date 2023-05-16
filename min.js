@@ -547,6 +547,50 @@ function lerpColor (color1, color2, amt) {
     return `rgba(${lerp(+r1, +r2, amt)}, ${lerp(+g1, +g2, amt)}, ${lerp(+b1, +b2, amt)}, ${lerp(+a1, +a2, amt)})`
 }
 /**
+ * returns the red value of the color
+ * @param {...(string|number|Array)} args
+ * @returns {number} - the red value
+ * @see {@link color} for the definition of the arguments
+**/
+function red (...args) {
+    if(skiJSData.color !== RGBA) return
+    const col = color(...args)
+    return +col.match(/\d+(\.|)\d*/)
+}
+/**
+ * returns the green value of the color
+ * @param {...(string|number|Array)} args
+ * @returns {number} - the green value
+ * @see {@link color} for the definition of the arguments
+**/
+function green (...args) {
+    if(skiJSData.color !== RGBA) return
+    const col = color(...args)
+    return +col.match(/\d+(\.|)\d*/g)[1]
+}
+/**
+ * returns the blue value of the color
+ * @param {...(string|number|Array)} args
+ * @returns {number} - the blue value
+ * @see {@link color} for the definition of the arguments
+**/
+function blue (...args) {
+    if(skiJSData.color !== RGBA) return
+    const col = color(...args)
+    return +col.match(/\d+(\.|)\d*/g)[2]
+}
+/**
+ * returns the alpha value of the color
+ * @param {...(string|number|Array)} args
+ * @returns {number} - the alpha value
+ * @see {@link color} for the definition of the arguments
+**/
+function alpha (...args) {
+    if(skiJSData.color !== RGBA) return
+    const col = color(...args)
+    return trunc(col.match(/\d+(\.|)\d*/g)[3] * 255)
+}
+/**
  * returns a promise that resolves once an image has been fetched.
  * @params {string} src - image source
  * @params {number} [width] - width of the image
