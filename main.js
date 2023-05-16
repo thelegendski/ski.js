@@ -1529,7 +1529,4 @@ Object.defineProperty(window, "draw", {
     configurable: true
 })
 
-// for the KA environment
-for (let i = requestAnimationFrame(() => 0); i--;) cancelAnimationFrame(i)
-
 //whew.
