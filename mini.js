@@ -1,6 +1,6 @@
 /*
     ski.js
-    version 1.9.0
+    version 1.9.x
 */
 
 var SPACE, LEFT, RIGHT, UP, DOWN, PI, TAU,LEFT_BUTTON, RIGHT_BUTTON, ESCAPE, TAB, SHIFT, CONTROL, ALT, ENTER, BACKSPACE, RGBA, HSL, HEX, skiJSData

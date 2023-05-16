@@ -205,6 +205,41 @@ var collision = {
             }
         }
     },
+    /**
+     * the point-rect collision object
+     * @namespace
+    **/
+    pointRect: {
+        /**
+         * returns true if the point is in the rectangle
+         * @param {{x: number, y: number}} point
+         * @param {{x: number, y: number, width: number, height: number}} rect - the rectangle
+         * @returns {boolean}
+        **/
+        collide (point, rect) {
+            rect.width = rect.width ?? rect.w
+            rect.height = rect.height ?? rect.h
+            if(skiJSData.rect === CENTER) return point.x >= rect.x - rect.width / 2 && point.x <= rect.x + rect.width / 2 && point.y >= rect.y - rect.height / 2 && point.y <= rect.y + rect.height / 2
+            else return point.x >= rect.x && point.x <= rect.x + rect.width
+        }
+    },
+    /**
+     * the point-circle collision object
+     * @namespace
+    **/
+    pointCircle: {
+        /**
+         * returns true if the point is in the circle
+         * @param {{x: number, y: number}} point
+         * @param {{x: number, y: number, size: number}} circle
+         * @param {number} [size=circle.size] - size of the circle
+         * @returns {boolean}
+        **/
+        collide (point, circle, size = circle.size) {
+            size = circle.size ?? circle.s ?? circle.radius ?? circle.r ?? circle.diameter / 2 ?? circle.d / 2
+            return dist(point.x, point.y, circle.x, circle.y) <= size
+        }
+    },
 }
 Object.freeze(collision)
 window.collision = collision
