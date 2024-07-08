@@ -20,7 +20,7 @@ function println (...args) {
     }).flat(1)
     args.forEach(arg => {
         const div = document.createElement("div")
-        div.setHTML(arg, new Sanitizer({allowElements: ["a", "span"]}))
+        div.innerHTML = arg
         div.setAttribute("class", "line")
         div.setAttribute("display", "flex")
         div.setAttribute("width", "100vw")
@@ -113,7 +113,7 @@ style.innerHTML = `
 }
 `
 closer.setAttribute("class", "close")
-closer.setHTML("X")
+closer.innerHTML = "X"
 logger.setAttribute("class", "logger")
 logger.onclick = e => e.target.classList.contains("close") && clearLogs()
 
