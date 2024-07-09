@@ -8,7 +8,7 @@ skiJSData = skiJSData ?? {}
  * each argument is printed out on a new line
  * @param {...*} args
 **/
-function println (...args) {
+println = function(...args) {
     closer.style.display === "none" && [...logger.childNodes].forEach(child => child.classList.contains("line") && logger.removeChild(child))
     logger.style.animation = "0.3s forwards open"
     closer.style.display = "flex"
@@ -20,7 +20,7 @@ function println (...args) {
     }).flat(1)
     args.forEach(arg => {
         const div = document.createElement("div")
-        div.innerHTML = arg
+        div.textContent = arg
         div.setAttribute("class", "line")
         div.setAttribute("display", "flex")
         div.setAttribute("width", "100vw")
@@ -113,7 +113,7 @@ style.innerHTML = `
 }
 `
 closer.setAttribute("class", "close")
-closer.innerHTML = "X"
+closer.textContent = "X"
 logger.setAttribute("class", "logger")
 logger.onclick = e => e.target.classList.contains("close") && clearLogs()
 

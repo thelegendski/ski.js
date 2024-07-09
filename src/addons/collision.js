@@ -41,7 +41,7 @@ var collision = {
                 x = constrain(circle.x, min(rect.x, rect.x + rect.width), max(rect.x, rect.x + rect.width))
                 y = constrain(circle.y, min(rect.y, rect.y + rect.height), max(rect.y, rect.y + rect.height))
             }
-            return collision.dist(circle.x, circle.y, x, y) <= sq(size)
+            return collision.dist(circle.x, circle.y, x, y) <= size
         },
         /**
          * returns the resolution position of a circle when in collision with a rectangle
@@ -203,6 +203,42 @@ var collision = {
             if(o <= 0){
                 return {x: circle.x - c.x * o, y: circle.y - c.y * o}
             }
+        }
+    },
+    /**
+     * the line-rect collision object
+     * @namespace
+    **/
+    lineRect: {
+        /**
+         * returns true if a line is colliding with a rectangle
+         * @param {{x: number, y: number}} a 
+         * @param {{x: number, y: number}} b 
+         * @param {{x: number, y: number, width: number, height: number}} rect 
+         * @returns {boolean}
+        **/
+        collide (a, b, rect) {
+            // adjust for rect mode
+            let minX, minY, maxX, maxY
+            if(skiJSData.rect === CENTER){
+                minX = rect.x - rect.width / 2
+                minY = rect.y - rect.height / 2
+                maxX = rect.x + rect.width / 2
+                maxY = rect.y + rect.height / 2
+            }
+            else {
+                minX = rect.x
+                minY = rect.y
+                maxX = rect.x + rect.width
+                maxY = rect.y + rect.height
+            }
+
+            return ( 
+                collision.lineLine.collide(a, b, { x: minX, y: minY }, { x: maxX, y: minY }) ||
+                collision.lineLine.collide(a, b, { x: minX, y: maxY }, { x: maxX, y: maxY }) ||
+                collision.lineLine.collide(a, b, { x: minX, y: minY }, { x: minX, y: maxY }) ||
+                collision.lineLine.collide(a, b, { x: maxX, y: minY }, { x: maxX, y: maxY })
+            )
         }
     },
     /**
