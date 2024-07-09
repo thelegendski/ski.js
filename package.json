@@ -1,8 +1,11 @@
 {
 	"scripts": {
-		"generate-docs": "jsdoc --configure jsdoc.json --verbose"
+  		"generate-docs": "jsdoc --configure jsdoc.json --verbose"
+	},
+	"dependencies": {
+		"jsdoc": "^4.0.3"
 	},
 	"devDependencies": {
-		"clean-jsdoc-theme": "^4.2.7"
+		"clean-jsdoc-theme": "^4.3.0"
 	}
 }

@@ -1,4 +1,4 @@
-<strong>[PT](https://khanacademy.org/profile/kaid_1007254215278267494550608)</strong> - helping to incorporate requestAnimationFrame over setInterval as well for the structure of the get function
+<strong>[PT](https://khanacademy.org/profile/kaid_1007254215278267494550608)</strong> - helping to incorporate requestAnimationFrame over setInterval as well the structure of the get function
 
 <strong>[Processing.js](https://github.com/processing-js/processing-js)</strong></a> - inspiration an' concepts. that's 'bout it. suck it inefficient, backwards canvas library.
 

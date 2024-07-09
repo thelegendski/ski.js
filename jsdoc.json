@@ -1,6 +1,6 @@
 {
     "source": {
-        "include": ["main.js", "addons/collision.js", "addons/print.js", "addons/vector.js"]
+        "include": ["src/main.js", "src/addons/collision.js", "src/addons/print.js", "src/addons/vector.js"]
     },
     "plugins": ["plugins/markdown"],
     "opts": {
@@ -31,7 +31,7 @@
                 }
             ],
             "base_url": "https://thelegendski.github.io/ski.js/docs/",
-            "favicon": "../ski.js pfp.png",
+            "favicon": "../logo.jpeg",
             "homepageTitle": "ski.js",
             "title": "ski.js"
         }
